@@ -1,0 +1,8 @@
+Quart
+azure-eventgrid
+azure-communication-callautomation==1.4.0b1
+semantic-kernel[realtime]
+hypercorn
+python-dotenv
+azure-identity
+azure-keyvault-secrets
