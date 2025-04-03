@@ -32,6 +32,7 @@ Before deploying, ensure you have the following:
 
 2. **Azure Resource Configuration**:
    - Communication Services: A phone number purchased and configured for inbound calls
+   NOTE: although trial phone numbers are available in free subscriptions, they will not work properly. You must have a paid phone number.
    - OpenAI Service: A deployment of a model that supports realtime API (e.g., GPT-4o)
    - AI Search: An index named "products" (or your preferred name) with fields:
      - name (String, Retrievable, Searchable)
