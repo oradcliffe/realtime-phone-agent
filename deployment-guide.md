@@ -93,13 +93,26 @@ For the application to work correctly, you need to set up an Azure AI Search ind
      - Retrievable: Yes
      - Searchable: Yes
 
-3. **Enable semantic search capability** on your index:
-   - Go to the "Semantic Configurations" tab
-   - Create a new configuration named "default"
-   - Select the relevant fields for title, content, and keyword fields
-     - Title: name
-     - Content: description
-     - Keyword: features
+3. **Configure semantic search capabilities** for your index:
+   - **Create a semantic configuration**:
+     - Go to the "Semantic Configurations" tab in your index
+     - Create a new configuration named "default" (this name matches what's used in the code)
+     - Map your index fields to semantic roles:
+       - Title field: `name`
+       - Content field: `description`
+       - Keyword fields: `features`
+   
+   - **Enable semantic ranker**:
+     - Note: The semantic configuration above defines *how* your data should be understood semantically
+     - The application code enables the semantic ranker at query time by using:
+       ```python
+       results = self.search_client.search(
+           query,
+           query_type="semantic",
+           semantic_configuration_name="default"
+       )
+       ```
+     - This combination of configuration and query-time settings enables the full semantic search capability
 
 4. **Import product data** into your index using one of these methods:
    - **Using the portal**:
