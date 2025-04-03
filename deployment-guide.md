@@ -60,7 +60,7 @@ Before deploying, ensure you have the following:
      ```
 
 5. **Product Data**:
-   - A populated Azure AI Search index with your product catalog
+   - A populated Azure AI Search index with your product catalog (sample data included in `products.json.example`)
    - Either import data directly to your search index, or
    - Use the Azure portal's Import data wizard to pull data from:
      - Azure Blob Storage (JSON/CSV files)
