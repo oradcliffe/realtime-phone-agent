@@ -1,3 +1,10 @@
+"""
+Search plugin for Azure AI Search integration.
+
+This is an original file created to extend the Call Automation demo
+with Azure AI Search capabilities.
+"""
+
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 import os

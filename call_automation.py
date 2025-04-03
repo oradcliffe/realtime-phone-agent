@@ -1,4 +1,9 @@
-# Copyright (c) Microsoft. All rights reserved.
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+# 
+# Original source: https://github.com/microsoft/semantic-kernel/tree/main/python/samples/demos/call_automation
+#
+# This file has been modified from the original version.
 
 import asyncio
 import base64
