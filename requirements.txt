@@ -6,3 +6,4 @@ hypercorn
 python-dotenv
 azure-identity
 azure-keyvault-secrets
+azure-search-documents

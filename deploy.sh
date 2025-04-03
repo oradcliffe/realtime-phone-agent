@@ -28,8 +28,11 @@ if [ -f .env ]; then
     # Remove surrounding quotes if present
     value=$(echo $value | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
     
-    echo "Adding secret: $key"
-    az keyvault secret set --vault-name $KEYVAULT_NAME --name $key --value "$value"
+    # Convert environment variable names to Key Vault secret names (replace _ with -)
+    secret_name=$(echo $key | tr '_' '-')
+    
+    echo "Adding secret: $secret_name"
+    az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"
   done < .env
 else
   echo ".env file not found. Please create it first."
@@ -72,14 +75,10 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-soc
 echo "Setting startup command..."
 az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "startup.txt"
 
-# Deploy the code
+# Deploy the code - using ZIP deployment for reliability
 echo "Deploying the application..."
-az webapp deployment source config-local-git --name $APP_NAME --resource-group $RESOURCE_GROUP
-git init
-git add .
-git commit -m "Initial deployment"
-git remote add azure $(az webapp deployment source config-local-git --name $APP_NAME --resource-group $RESOURCE_GROUP --query url -o tsv)
-git push azure master
+zip -r deployment.zip .
+az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $APP_NAME --src deployment.zip
 
 # Display the application URL
 echo "Deployment completed. Your application is available at:"

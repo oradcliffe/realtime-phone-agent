@@ -1,25 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-####################################################################
-# Sample Quart webapp with that connects to Azure OpenAI           #
-# Make sure to install `uv`, see:                                  #
-# https://docs.astral.sh/uv/getting-started/installation/          #
-# and rename .env.example to .env and fill in the values.          #
-# Follow the guidance in README.md for more info.                  #
-# To run the app, use:                                             #
-# `uv run --env-file .env call_automation.py`                     #
-####################################################################
-#
-# /// script
-# requires-python = ">=3.10"
-# dependencies = [
-#     "Quart",
-#     "azure-eventgrid",
-#     "azure-communication-callautomation==1.4.0b1",
-#     "semantic-kernel[realtime]",
-# ]
-# ///
-
 import asyncio
 import base64
 import os
@@ -29,6 +9,11 @@ from logging import INFO
 from random import randint
 from urllib.parse import urlencode, urlparse, urlunparse
 
+# Key Vault Integration
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
+
+# Azure Communication Services imports
 from azure.communication.callautomation import (
     AudioFormat,
     MediaStreamingAudioChannelType,
@@ -41,6 +26,7 @@ from azure.eventgrid import EventGridEvent, SystemEventNames
 from numpy import ndarray
 from quart import Quart, Response, json, request, websocket
 
+# Semantic Kernel imports
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.open_ai import (
@@ -52,9 +38,8 @@ from semantic_kernel.connectors.ai.realtime_client_base import RealtimeClientBas
 from semantic_kernel.contents import AudioContent, RealtimeAudioEvent
 from semantic_kernel.functions import kernel_function
 
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
-import os
+# Import custom plugins
+from search_plugin import SearchPlugin
 
 # Setup Key Vault integration
 def load_secrets_from_keyvault():
@@ -76,7 +61,10 @@ def load_secrets_from_keyvault():
             "AZURE-OPENAI-ENDPOINT",
             "AZURE-OPENAI-REALTIME-DEPLOYMENT-NAME",
             "AZURE-OPENAI-API-VERSION",
-            "AZURE-OPENAI-API-KEY"
+            "AZURE-OPENAI-API-KEY",
+            "AZURE-SEARCH-ENDPOINT",
+            "AZURE-SEARCH-KEY",
+            "AZURE-SEARCH-INDEX"
         ]
         
         # Fetch each secret and set as environment variable
@@ -97,16 +85,14 @@ def load_secrets_from_keyvault():
 load_secrets_from_keyvault()
 
 # Callback events URI to handle callback events.
-CALLBACK_URI_HOST = os.environ["CALLBACK_URI_HOST"]
+CALLBACK_URI_HOST = os.environ.get("CALLBACK_URI_HOST", "https://your-app-name.azurewebsites.net")
 CALLBACK_EVENTS_URI = CALLBACK_URI_HOST + "/api/callbacks"
 
 acs_client = CallAutomationClient.from_connection_string(os.environ["ACS_CONNECTION_STRING"])
 app = Quart(__name__)
 
 # region: Semantic Kernel
-
 kernel = Kernel()
-
 
 class HelperPlugin:
     """Helper plugin for the Semantic Kernel."""
@@ -135,9 +121,11 @@ class HelperPlugin:
 
 kernel.add_plugin(plugin=HelperPlugin(), plugin_name="helpers", description="Helper functions for the realtime client.")
 
+# Add the search plugin for product information
+search_plugin = SearchPlugin()
+kernel.add_plugin(plugin=search_plugin, plugin_name="search", description="Search for products in our catalog")
+
 # region: Handlers for audio and data streams
-
-
 async def from_realtime_to_acs(audio: ndarray):
     """Function that forwards the audio from the model to the websocket of the ACS client."""
     await websocket.send(
@@ -159,8 +147,8 @@ async def from_acs_to_realtime(client: RealtimeClientBase):
                         audio=AudioContent(data=data["audioData"]["data"], data_format="base64", inner_content=data),
                     )
                 )
-        except Exception:
-            app.logger.info("Websocket connection closed.")
+        except Exception as e:
+            app.logger.info(f"Websocket connection closed: {str(e)}")
             break
 
 
@@ -198,7 +186,6 @@ async def handle_realtime_messages(client: RealtimeClientBase):
 
 # region: Routes
 
-
 # WebSocket.
 @app.websocket("/ws")
 async def ws():
@@ -207,12 +194,19 @@ async def ws():
     # create the client, using the audio callback
     client = AzureRealtimeWebsocket()
     settings = AzureRealtimeExecutionSettings(
-        instructions="""You are a chat bot. Your name is Mosscap and
-    you have one goal: figure out what people need.
-    Your full name, should you need to know it, is
-    Splendid Speckled Mosscap. You communicate
-    effectively, but you tend to answer with long
-    flowery prose.""",
+        instructions="""You are a helpful customer service agent for a camera and photography equipment company. 
+        Your name is Mosscap and you help customers with product information and general inquiries.
+        
+        When customers ask about products, use the search.search_products function to look up 
+        information in our product catalog. For example, if they ask about cameras, call 
+        search_products with "cameras" as the query. For specific features, include those in 
+        your search like "waterproof cameras" or "tripods for travel".
+        
+        Always search for products before saying you don't have information. Only recommend 
+        products that match what the customer is looking for.
+        
+        Your full name, should you need to know it, is Splendid Speckled Mosscap. You communicate
+        effectively, but you tend to answer with long flowery prose.""",
         turn_detection={"type": "server_vad"},
         voice="shimmer",
         input_audio_format="pcm16",
@@ -259,7 +253,6 @@ async def incoming_call_handler() -> Response:
 
             parsed_url = urlparse(CALLBACK_EVENTS_URI)
             websocket_url = urlunparse(("wss", parsed_url.netloc, "/ws", "", "", ""))
-
             app.logger.info("callback url: %s", callback_uri)
             app.logger.info("websocket url: %s", websocket_url)
 
@@ -327,8 +320,6 @@ def home():
 
 
 # region: Main
-
-
 if __name__ == "__main__":
     app.logger.setLevel(INFO)
-    app.run(port=8080)
+    app.run(host="0.0.0.0", port=8080)
