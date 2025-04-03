@@ -1,0 +1,873 @@
+[
+    {
+      "id": "tent-001",
+      "name": "Alpine Explorer 3-Person Tent",
+      "description": "Our most versatile all-season tent featuring a reinforced dome design that withstands heavy snow loads and high winds. The waterproof ripstop nylon construction with sealed seams ensures you stay dry during unexpected downpours.",
+      "price": 299.99,
+      "features": [
+        "Reinforced dome design",
+        "Waterproof ripstop nylon",
+        "Two vestibules",
+        "5.2 pounds trail weight",
+        "All-season rating"
+      ]
+    },
+    {
+      "id": "boots-001",
+      "name": "TrailMaster Pro Hiking Boots",
+      "description": "These premium waterproof leather hiking boots offer superior ankle support and cushioning for long-distance treks. The Vibram soles provide exceptional traction on varied terrain, from muddy trails to slick rock faces.",
+      "price": 189.99,
+      "features": [
+        "Waterproof leather",
+        "Superior ankle support",
+        "Vibram soles",
+        "Gore-Tex lining",
+        "Excellent breathability"
+      ]
+    },
+    {
+      "id": "backpack-001",
+      "name": "Wilderness Explorer 65L Backpack",
+      "description": "Designed for multi-day backpacking trips, this 65-liter pack features an adjustable suspension system and ventilated back panel for maximum comfort. Multiple access points and organizational pockets keep your gear accessible.",
+      "price": 249.95,
+      "features": [
+        "65-liter capacity",
+        "Adjustable suspension system",
+        "Ventilated back panel",
+        "Rain cover included",
+        "Hip belt pockets"
+      ]
+    },
+    {
+      "id": "sleeping-bag-001",
+      "name": "Arctic Dreams 0°F Down Sleeping Bag",
+      "description": "Stay warm in sub-freezing temperatures with this 0°F rated down sleeping bag. The 800-fill power goose down provides exceptional warmth-to-weight ratio, while the water-resistant shell protects against morning condensation.",
+      "price": 329.99,
+      "features": [
+        "0°F temperature rating",
+        "800-fill power goose down",
+        "Water-resistant shell",
+        "Draft collar and zipper baffle",
+        "Compresses to 8×14 inches"
+      ]
+    },
+    {
+      "id": "stove-001",
+      "name": "MountainChef Pro Camp Stove",
+      "description": "This portable two-burner propane stove delivers 20,000 BTUs of cooking power. The adjustable burners and piezo ignition system make cooking at camp as convenient as cooking at home.",
+      "price": 129.95,
+      "features": [
+        "20,000 BTU output",
+        "Two adjustable burners",
+        "Piezo ignition system",
+        "Wind protection panels",
+        "Stainless steel construction"
+      ]
+    },
+    {
+      "id": "chair-001",
+      "name": "Fireside Comfort Camp Chair",
+      "description": "Relax around the campfire in this deluxe camping chair featuring padded armrests and a supportive high back. The powder-coated steel frame supports up to 300 pounds, while the insulated cup holder keeps your beverages at the right temperature.",
+      "price": 79.99,
+      "features": [
+        "Padded armrests and high back",
+        "300-pound weight capacity",
+        "Insulated cup holder",
+        "Side pocket organizer",
+        "Includes carry bag"
+      ]
+    },
+    {
+      "id": "lantern-001",
+      "name": "EverBright 800 Lumen LED Lantern",
+      "description": "Illuminate your campsite with this powerful 800-lumen LED lantern. Three brightness settings and a 360-degree light distribution ensure optimal lighting for any situation. The rechargeable battery lasts up to 100 hours on low setting.",
+      "price": 59.95,
+      "features": [
+        "800-lumen output",
+        "Three brightness settings",
+        "360-degree light distribution",
+        "100-hour runtime on low",
+        "USB rechargeable"
+      ]
+    },
+    {
+      "id": "cookset-001",
+      "name": "Backcountry Gourmet Cookset",
+      "description": "This comprehensive cookset includes everything you need to prepare meals in the backcountry. The nesting design minimizes pack space, while the non-stick coating makes cleanup a breeze even without running water.",
+      "price": 89.99,
+      "features": [
+        "Complete 10-piece set",
+        "Nesting design for compact storage",
+        "Non-stick coating",
+        "Folding handles",
+        "Includes pot gripper and cutting board"
+      ]
+    },
+    {
+      "id": "water-filter-001",
+      "name": "PureStream Micro Water Filter",
+      "description": "This ultralight water filter removes 99.9999% of bacteria and 99.9% of protozoa from any freshwater source. The flow rate of 1.5 liters per minute means you won't have to wait long for clean water on the trail.",
+      "price": 39.95,
+      "features": [
+        "0.1 micron filtration",
+        "1.5 liter per minute flow rate",
+        "Removes bacteria and protozoa",
+        "100,000 liter lifetime",
+        "Only 2 ounces"
+      ]
+    },
+    {
+      "id": "first-aid-001",
+      "name": "TrailMedic Comprehensive First Aid Kit",
+      "description": "Be prepared for emergencies with this comprehensive first aid kit designed specifically for outdoor adventures. Contains 85 essential items organized in a waterproof case with clear compartments for quick access.",
+      "price": 49.99,
+      "features": [
+        "85 essential first aid items",
+        "Waterproof case",
+        "Organized compartments",
+        "Emergency guide included",
+        "Blister treatment specialization"
+      ]
+    },
+    {
+      "id": "camera-001",
+      "name": "AdventurePro Waterproof Camera",
+      "description": "Capture your outdoor adventures with this rugged waterproof camera. Waterproof to 30 feet and shockproof from 7-foot drops, it takes stunning 20MP photos and 4K video even in challenging conditions.",
+      "price": 349.99,
+      "features": [
+        "20MP photo resolution",
+        "4K video recording",
+        "Waterproof to 30 feet",
+        "Shockproof from 7 feet",
+        "Built-in GPS and Wi-Fi"
+      ]
+    },
+    {
+      "id": "binoculars-001",
+      "name": "VistaSeek 10x42 Waterproof Binoculars",
+      "description": "Experience crystal clear wildlife viewing with these premium 10x42 binoculars. The multi-coated lenses and BAK4 prisms deliver exceptional brightness and clarity, while the nitrogen-purged construction ensures fogproof performance in any weather.",
+      "price": 179.95,
+      "features": [
+        "10x magnification with 42mm objective lenses",
+        "Multi-coated optics",
+        "BAK4 prism system",
+        "Waterproof and fogproof",
+        "Includes neck strap and case"
+      ]
+    },
+    {
+      "id": "hammock-001",
+      "name": "SkyNest Ultralight Camping Hammock",
+      "description": "Relax in nature with this ultralight camping hammock that supports up to 400 pounds yet packs down to the size of a softball. The quick-hang straps make setup a breeze at any campsite with trees.",
+      "price": 69.99,
+      "features": [
+        "Ultralight (9 ounces)",
+        "400-pound capacity",
+        "Packs to size of softball",
+        "Quick-hang strap system",
+        "Triple-stitched seams"
+      ]
+    },
+    {
+      "id": "jacket-001",
+      "name": "StormShield Pro Rain Jacket",
+      "description": "Stay dry in the harshest downpours with this fully seam-sealed waterproof rain jacket. The 3-layer construction balances breathability with weather protection, while adjustable features ensure a perfect fit.",
+      "price": 199.95,
+      "features": [
+        "100% waterproof with seam sealing",
+        "3-layer breathable construction",
+        "Adjustable hood, cuffs, and hem",
+        "Pit zips for ventilation",
+        "Packs into own pocket"
+      ]
+    },
+    {
+      "id": "pants-001",
+      "name": "TrailFlex Convertible Hiking Pants",
+      "description": "These versatile hiking pants convert to shorts with zip-off legs, perfect for changing weather conditions. The quick-dry, UPF 50+ fabric protects from sun and resists light rain while remaining breathable.",
+      "price": 79.95,
+      "features": [
+        "Zip-off convertible design",
+        "UPF 50+ sun protection",
+        "Quick-dry fabric",
+        "Articulated knees",
+        "Six pockets including secure zip pocket"
+      ]
+    },
+    {
+      "id": "gps-001",
+      "name": "TrailGuide GPS Navigator",
+      "description": "Never lose your way with this rugged GPS unit featuring preloaded topographic maps and 16-hour battery life. The sunlight-readable color display and intuitive interface make navigation simple even in challenging conditions.",
+      "price": 299.99,
+      "features": [
+        "Preloaded topographic maps",
+        "16-hour battery life",
+        "Sunlight-readable display",
+        "Waterproof (IPX7)",
+        "Barometric altimeter and 3-axis compass"
+      ]
+    },
+    {
+      "id": "headlamp-001",
+      "name": "NightTracker 350 Headlamp",
+      "description": "This versatile headlamp delivers 350 lumens of bright, even light with adjustable beam distance. The red night vision mode preserves your night vision, while the motion sensor allows hands-free operation.",
+      "price": 49.95,
+      "features": [
+        "350-lumen output",
+        "Adjustable beam distance",
+        "Red night vision mode",
+        "Motion-activated sensor",
+        "Water-resistant construction"
+      ]
+    },
+    {
+      "id": "pad-001",
+      "name": "CloudRest Insulated Sleeping Pad",
+      "description": "Experience exceptional comfort and warmth with this 3-inch thick insulated sleeping pad. The R-value of 4.5 provides insulation for three-season camping, while the quick-inflate valve makes setup and packdown fast and easy.",
+      "price": 129.99,
+      "features": [
+        "3-inch thickness",
+        "R-value of 4.5",
+        "Quick-inflate/deflate valve",
+        "Packs to 4×8 inches",
+        "Includes repair kit"
+      ]
+    },
+    {
+      "id": "pillow-001",
+      "name": "DreamSoft Camping Pillow",
+      "description": "Don't sacrifice comfort at camp with this compressible foam camping pillow. The soft fleece cover is removable and washable, while the whole pillow compresses to the size of a water bottle for easy packing.",
+      "price": 29.95,
+      "features": [
+        "Compressible foam fill",
+        "Soft fleece cover",
+        "Removable, washable cover",
+        "Compresses to water bottle size",
+        "Weighs only 9 ounces"
+      ]
+    },
+    {
+      "id": "knife-001",
+      "name": "OutdoorsEdge Multi-Tool Knife",
+      "description": "This versatile 15-function multi-tool knife combines essential tools for outdoor adventures in a compact, stainless steel package. The locking blade and tools ensure safe use, while the included sheath provides convenient carry options.",
+      "price": 59.99,
+      "features": [
+        "15 essential tools",
+        "Locking blade and tools",
+        "Stainless steel construction",
+        "Includes belt sheath",
+        "Lifetime warranty"
+      ]
+    },
+    {
+      "id": "fire-starter-001",
+      "name": "BlazeMaster Fire Starter Kit",
+      "description": "Start fires reliably in any conditions with this comprehensive fire starter kit. The ferrocerium rod produces 5,000°F sparks, while the included tinder and waterproof case ensure you can start a fire even in wet conditions.",
+      "price": 24.95,
+      "features": [
+        "5,000°F ferrocerium rod",
+        "Waterproof case",
+        "Includes emergency tinder",
+        "Comfortable handle",
+        "Works when wet"
+      ]
+    },
+    {
+      "id": "trekking-poles-001",
+      "name": "SummitSeeker Carbon Fiber Trekking Poles",
+      "description": "Reduce impact on your joints and improve stability with these ultralight carbon fiber trekking poles. The quick-adjust locks and ergonomic cork grips ensure comfortable use on any terrain, from flat trails to steep ascents.",
+      "price": 149.95,
+      "features": [
+        "Carbon fiber construction",
+        "Quick-adjust locks",
+        "Ergonomic cork grips",
+        "Carbide tips with rubber caps",
+        "Collapse to 24 inches"
+      ]
+    },
+    {
+      "id": "socks-001",
+      "name": "TrailComfort Merino Wool Hiking Socks",
+      "description": "Keep your feet comfortable all day with these premium merino wool hiking socks. The strategic cushioning and arch support prevent fatigue, while the merino wool blend regulates temperature and prevents blisters and odor.",
+      "price": 21.95,
+      "features": [
+        "Merino wool blend",
+        "Strategic cushioning",
+        "Arch support",
+        "Seamless toe design",
+        "Lifetime guarantee"
+      ]
+    },
+    {
+      "id": "flashlight-001",
+      "name": "TorchBeam 1000 Tactical Flashlight",
+      "description": "This powerful tactical flashlight delivers 1000 lumens of brightness with five modes including SOS and strobe. The aircraft-grade aluminum body is virtually indestructible, while the rechargeable battery eliminates the need for disposable batteries.",
+      "price": 89.99,
+      "features": [
+        "1000-lumen output",
+        "Five lighting modes",
+        "Aircraft-grade aluminum body",
+        "USB rechargeable",
+        "Water-resistant (IPX7)"
+      ]
+    },
+    {
+      "id": "sunglasses-001",
+      "name": "AlpineVision Polarized Sunglasses",
+      "description": "Protect your eyes in the harshest conditions with these polarized sunglasses featuring wraparound protection and interchangeable lenses. The polarized lenses eliminate glare from water and snow, while the flexible frame ensures a secure fit during active pursuits.",
+      "price": 129.95,
+      "features": [
+        "Polarized lenses",
+        "Wraparound protection",
+        "Interchangeable lens system",
+        "Flexible, durable frame",
+        "Includes hard case and cleaning cloth"
+      ]
+    },
+    {
+      "id": "axe-001",
+      "name": "ForestMaster Camping Axe",
+      "description": "This versatile camping axe features a 3.5-inch razor-sharp blade and 16-inch handle, perfect for chopping firewood and campsite tasks. The included sheath protects the blade and allows safe transport in your pack.",
+      "price": 79.95,
+      "features": [
+        "3.5-inch sharp steel blade",
+        "16-inch handle length",
+        "Fiberglass reinforced handle",
+        "Includes blade sheath",
+        "Balanced weight distribution"
+      ]
+    },
+    {
+      "id": "watch-001",
+      "name": "ExplorerPro GPS Adventure Watch",
+      "description": "Navigate confidently with this GPS-enabled adventure watch featuring built-in topographic maps and 100+ hour battery life in GPS mode. The sapphire crystal face and titanium bezel ensure durability for years of adventures.",
+      "price": 549.99,
+      "features": [
+        "Built-in topographic maps",
+        "100+ hour GPS battery life",
+        "Sapphire crystal face",
+        "Titanium bezel",
+        "Heart rate and pulse oximeter"
+      ]
+    },
+    {
+      "id": "stove-002",
+      "name": "PocketRocket Ultralight Stove",
+      "description": "This ultralight canister stove weighs just 2.6 ounces yet boils water in under 3.5 minutes. The precision flame control allows everything from a gentle simmer to a rolling boil, perfect for backcountry cooking.",
+      "price": 44.95,
+      "features": [
+        "2.6-ounce weight",
+        "3.5-minute boil time",
+        "Precision flame control",
+        "Works with most screw-top canisters",
+        "Includes protective case"
+      ]
+    },
+    {
+      "id": "table-001",
+      "name": "CampHost Folding Table",
+      "description": "This lightweight aluminum camping table provides a stable surface for cooking and dining. The roll-top design packs small yet sets up in seconds, while the adjustable legs accommodate uneven ground.",
+      "price": 89.99,
+      "features": [
+        "Lightweight aluminum construction",
+        "Roll-top design",
+        "Adjustable legs",
+        "Supports 70 pounds",
+        "Includes carry bag"
+      ]
+    },
+    {
+      "id": "bear-canister-001",
+      "name": "BearSafe Food Container",
+      "description": "Protect your food and the bears with this certified bear-resistant food container. The smooth sides prevent bears from getting a grip or teeth hold, while the tool-free opening mechanism is still easy for humans to use.",
+      "price": 79.95,
+      "features": [
+        "Certified bear-resistant",
+        "650 cubic inch capacity",
+        "Tool-free opening mechanism",
+        "Smooth, grip-resistant exterior",
+        "Transparent for contents visibility"
+      ]
+    },
+    {
+      "id": "towel-001",
+      "name": "QuickDry Microfiber Towel Set",
+      "description": "This set of ultra-absorbent microfiber towels includes three sizes perfect for backcountry hygiene. They absorb 5 times their weight in water yet wring out nearly completely dry and resist odors even after multiple uses.",
+      "price": 34.95,
+      "features": [
+        "Set of 3 sizes",
+        "Ultra-absorbent microfiber",
+        "Quick-drying design",
+        "Antimicrobial treatment",
+        "Includes mesh carry bag"
+      ]
+    },
+    {
+      "id": "map-case-001",
+      "name": "TrailGuide Waterproof Map Case",
+      "description": "Keep your maps and navigation tools protected from the elements with this fully waterproof map case. The clear window on both sides allows map reading without removal, while the secure closure system prevents accidental opening.",
+      "price": 24.99,
+      "features": [
+        "100% waterproof protection",
+        "Clear window on both sides",
+        "Secure closure system",
+        "Neck cord included",
+        "Fits standard topographic maps"
+      ]
+    },
+    {
+      "id": "gaiters-001",
+      "name": "DirtBlocker Waterproof Hiking Gaiters",
+      "description": "Keep debris and moisture out of your boots with these durable waterproof gaiters. The adjustable closure systems ensure a secure fit on any footwear, while the reinforced lower section resists abrasion from rocks and brush.",
+      "price": 39.95,
+      "features": [
+        "Waterproof breathable fabric",
+        "Adjustable closure systems",
+        "Reinforced lower section",
+        "Boot lace hook",
+        "Reflective accents"
+      ]
+    },
+    {
+      "id": "hat-001",
+      "name": "SunShield Wide-Brim Hat",
+      "description": "Protect yourself from harmful UV rays with this UPF 50+ wide-brim hat. The moisture-wicking sweatband keeps you comfortable during active pursuits, while the adjustable chin cord prevents loss in windy conditions.",
+      "price": 34.95,
+      "features": [
+        "UPF 50+ sun protection",
+        "3.5-inch wide brim",
+        "Moisture-wicking sweatband",
+        "Adjustable chin cord",
+        "Packable design"
+      ]
+    },
+    {
+      "id": "snow-shoes-001",
+      "name": "WinterTrek All-Terrain Snowshoes",
+      "description": "Explore winter landscapes with these versatile snowshoes featuring aggressive crampons and an ergonomic binding system. The lightweight aluminum frame supports users up to 220 pounds while maintaining maneuverability in varied terrain.",
+      "price": 219.95,
+      "features": [
+        "Aggressive steel crampons",
+        "Ergonomic binding system",
+        "Aluminum frame construction",
+        "220-pound weight capacity",
+        "Includes carry bag"
+      ]
+    },
+    {
+      "id": "hand-warmers-001",
+      "name": "HeatWave Rechargeable Hand Warmer",
+      "description": "Stay warm in cold conditions with this rechargeable hand warmer that doubles as a power bank. Three heat settings provide up to 8 hours of continuous warmth, while the 5200mAh battery can also charge your mobile devices.",
+      "price": 39.99,
+      "features": [
+        "Three heat settings",
+        "8-hour runtime",
+        "5200mAh battery capacity",
+        "Double-sided heating",
+        "Power bank functionality"
+      ]
+    },
+    {
+      "id": "water-bottle-001",
+      "name": "HydroTrek Insulated Water Bottle",
+      "description": "Keep your beverages at the perfect temperature with this vacuum-insulated stainless steel water bottle. Hot drinks stay hot for 12 hours, while cold drinks remain cold for 24 hours, regardless of outside temperatures.",
+      "price": 34.95,
+      "features": [
+        "32-ounce capacity",
+        "Vacuum insulation technology",
+        "12 hours hot / 24 hours cold",
+        "Leakproof lid design",
+        "BPA-free construction"
+      ]
+    },
+    {
+      "id": "bluetooth-speaker-001",
+      "name": "BassCamp Rugged Bluetooth Speaker",
+      "description": "Bring your music anywhere with this waterproof, shock-resistant Bluetooth speaker. The 20-hour battery life and powerful bass response ensure your campsite has quality sound, while the integrated carabiner allows easy attachment to your pack.",
+      "price": 89.99,
+      "features": [
+        "Waterproof (IPX7)",
+        "Shock-resistant design",
+        "20-hour battery life",
+        "Enhanced bass response",
+        "Integrated carabiner"
+      ]
+    },
+    {
+      "id": "solar-charger-001",
+      "name": "SunPower Portable Solar Charger",
+      "description": "Harness the sun's energy to keep your devices powered in the backcountry. This foldable solar panel delivers 21W of power with dual USB ports for charging multiple devices simultaneously. The weather-resistant design ensures reliability in varied conditions.",
+      "price": 79.95,
+      "features": [
+        "21W solar output",
+        "Dual USB charging ports",
+        "Foldable, packable design",
+        "Weather-resistant construction",
+        "Integrated kickstand"
+      ]
+    },
+    {
+      "id": "radio-001",
+      "name": "EmergencyLink Weather Radio",
+      "description": "Stay informed and connected with this emergency weather radio featuring NOAA alerts and multiple power options. The hand crank and solar panel ensure you're never without power, while the built-in flashlight and phone charger provide additional emergency functionality.",
+      "price": 49.99,
+      "features": [
+        "NOAA weather alerts",
+        "Multiple power options (solar, crank, battery)",
+        "Built-in flashlight",
+        "Phone charging capability",
+        "SOS alarm with flashing beacon"
+      ]
+    },
+    {
+      "id": "lighter-001",
+      "name": "StormProof Plasma Lighter",
+      "description": "Light fires in any conditions with this windproof, waterproof plasma lighter. The electric arc works at any altitude and in any weather, while the rechargeable battery provides up to 300 ignitions per charge.",
+      "price": 39.95,
+      "features": [
+        "Windproof and waterproof",
+        "Works at any altitude",
+        "300 ignitions per charge",
+        "USB rechargeable",
+        "Safety cap included"
+      ]
+    },
+    {
+      "id": "spork-001",
+      "name": "TitanLite Ultralight Spork",
+      "description": "This titanium spork combines fork, spoon, and knife functions in a single ultralight utensil weighing just 0.6 ounces. The polished edges and ergonomic design make eating comfortable, while the included carabiner allows attachment to your pack.",
+      "price": 14.95,
+      "features": [
+        "Titanium construction",
+        "0.6-ounce weight",
+        "3-in-1 functionality",
+        "Polished edges",
+        "Includes mini carabiner"
+      ]
+    },
+    {
+      "id": "gloves-001",
+      "name": "FrostGuard Waterproof Gloves",
+      "description": "Keep your hands warm and dry with these waterproof insulated gloves featuring touchscreen-compatible fingertips. The reinforced palm provides excellent grip on trekking poles and tools, while maintaining dexterity for camp tasks.",
+      "price": 49.95,
+      "features": [
+        "Waterproof membrane",
+        "Thinsulate insulation",
+        "Touchscreen-compatible fingertips",
+        "Reinforced palm",
+        "Adjustable wrist closure"
+      ]
+    },
+    {
+      "id": "compass-001",
+      "name": "NavigatePro Orienteering Compass",
+      "description": "Navigate precisely with this professional-grade orienteering compass featuring a luminous dial and adjustable declination. The liquid-filled capsule ensures stable operation, while the clear baseplate works seamlessly with maps.",
+      "price": 39.99,
+      "features": [
+        "Luminous dial",
+        "Adjustable declination",
+        "Liquid-filled capsule",
+        "Clear baseplate with ruler",
+        "Lanyard included"
+      ]
+    },
+    {
+      "id": "survival-kit-001",
+      "name": "WildernessSurvival Emergency Kit",
+      "description": "Be prepared for backcountry emergencies with this comprehensive survival kit containing 23 essential tools in a waterproof case. From fire starting to emergency signaling and first aid, this compact kit covers the survival essentials.",
+      "price": 59.95,
+      "features": [
+        "23 essential survival tools",
+        "Waterproof case",
+        "Fire starting tools",
+        "Emergency signaling equipment",
+        "First aid supplies"
+      ]
+    },
+    {
+      "id": "rain-pants-001",
+      "name": "StormBarrier Waterproof Rain Pants",
+      "description": "Complete your rain protection with these fully seam-sealed waterproof rain pants. The full-length side zippers allow easy on/off over boots, while articulated knees provide freedom of movement on the trail.",
+      "price": 129.95,
+      "features": [
+        "Fully seam-sealed",
+        "Waterproof breathable fabric",
+        "Full-length side zippers",
+        "Articulated knees",
+        "Adjustable waist and cuffs"
+      ]
+    },
+    {
+      "id": "blanket-001",
+      "name": "BaseHeater Insulated Camping Blanket",
+      "description": "This versatile insulated blanket serves as a lightweight sleeping option in warm weather or an extra layer for cold conditions. The ripstop shell and synthetic insulation maintain warmth even when wet, making it perfect for unpredictable weather.",
+      "price": 89.99,
+      "features": [
+        "Synthetic insulation",
+        "Ripstop shell fabric",
+        "Water-resistant finish",
+        "Snaps for wear as a poncho",
+        "Stuff sack included"
+      ]
+    },
+    {
+      "id": "tent-002",
+      "name": "UltraTrek 1-Person Backpacking Tent",
+      "description": "This ultralight single-person tent weighs just 2.5 pounds yet provides full protection from the elements. The freestanding design sets up in minutes, while the vestibule offers covered storage space for your pack and boots.",
+      "price": 249.95,
+      "features": [
+        "2.5-pound trail weight",
+        "Freestanding design",
+        "Full coverage rainfly",
+        "Vestibule for gear storage",
+        "Mesh body for ventilation"
+      ]
+    },
+    {
+      "id": "pillow-002",
+      "name": "NeckEase Inflatable Travel Pillow",
+      "description": "Get restful sleep anywhere with this ergonomically designed inflatable pillow that cradles your head and neck. The ultralight design weighs just 2.8 ounces and packs to the size of an egg, yet provides surprising comfort.",
+      "price": 24.95,
+      "features": [
+        "Ergonomic design",
+        "2.8-ounce weight",
+        "Packs to size of an egg",
+        "Self-inflating valve",
+        "Soft touch fabric cover"
+      ]
+    },
+    {
+      "id": "umbrella-001",
+      "name": "SkyShield Trekking Umbrella",
+      "description": "This specialized trekking umbrella provides UPF 50+ sun protection and waterproof coverage in a rugged package designed for the trail. The carbon fiber frame reduces weight while maintaining windproof performance in gusts up to 40mph.",
+      "price": 49.95,
+      "features": [
+        "UPF 50+ sun protection",
+        "Carbon fiber frame",
+        "Windproof to 40mph",
+        "Ergonomic trekking handle",
+        "Weighs only 8 ounces"
+      ]
+    },
+    {
+      "id": "boots-002",
+      "name": "AlpineAssault Mountaineering Boots",
+      "description": "These technical mountaineering boots feature full-grain leather uppers and rigid crampon-compatible soles for serious alpine pursuits. The Thinsulate insulation and waterproof membrane keep feet warm and dry in extreme conditions.",
+      "price": 349.95,
+      "features": [
+        "Full-grain leather uppers",
+        "Crampon-compatible rigid soles",
+        "Thinsulate insulation",
+        "Waterproof membrane",
+        "High-ankle support"
+      ]
+    },
+    {
+        "id": "pad-002",
+        "name": "Z-Fold Ultralight Sleeping Pad",
+        "description": "This innovative folding foam sleeping pad provides insulation and comfort at just 14 ounces. The accordion-style folding design makes packing quick and easy, while the closed-cell foam construction ensures no inflation is required.",
+        "price": 44.95,
+        "features": [
+          "14-ounce weight",
+          "Accordion-style folding",
+          "Closed-cell foam construction",
+          "R-value of 2.0",
+          "No inflation required"
+        ]
+      },
+      {
+        "id": "beanie-001",
+        "name": "MerinoComfort Insulated Beanie",
+        "description": "This premium merino wool beanie provides exceptional warmth without itching. The soft, breathable fabric regulates temperature and manages moisture during high-output activities in cold weather, while still retaining warmth when wet.",
+        "price": 29.95,
+        "features": [
+          "Premium merino wool",
+          "Moisture-wicking properties",
+          "Retains warmth when wet",
+          "Breathable construction",
+          "One size fits most"
+        ]
+      },
+      {
+        "id": "stuff-sack-001",
+        "name": "UltraCompress Waterproof Stuff Sacks",
+        "description": "Keep your gear organized and dry with this set of three waterproof stuff sacks. The silnylon construction sheds water while remaining lightweight, and the compression straps reduce packed volume by up to 30%.",
+        "price": 39.95,
+        "features": [
+          "Set of 3 sizes (5L, 10L, 15L)",
+          "Waterproof silnylon construction",
+          "Compression straps",
+          "Roll-top closure",
+          "Reinforced seams"
+        ]
+      },
+      {
+        "id": "trowel-001",
+        "name": "DigMaster Ultralight Trowel",
+        "description": "Follow Leave No Trace principles with this durable yet ultralight backcountry trowel. The serrated edge cuts through roots and hard soil, while the bright orange color ensures you won't accidentally leave it behind.",
+        "price": 19.95,
+        "features": [
+          "Weighs only 0.6 ounces",
+          "Serrated digging edge",
+          "High-visibility orange color",
+          "Measurement markers for proper depth",
+          "Includes nylon storage bag"
+        ]
+      },
+      {
+        "id": "dry-bag-001",
+        "name": "AquaShield Heavy-Duty Dry Bag",
+        "description": "Protect your gear during water crossings and rain with this rugged 30-liter dry bag. The heavy-duty construction and roll-top closure create a watertight seal, while the D-rings allow secure attachment to your boat or pack.",
+        "price": 34.95,
+        "features": [
+          "30-liter capacity",
+          "Waterproof roll-top design",
+          "Reinforced bottom",
+          "D-rings for attachment",
+          "Includes shoulder strap"
+        ]
+      },
+      {
+        "id": "camera-002",
+        "name": "TrailShot Pro DSLR Camera",
+        "description": "Capture professional-quality images of your adventures with this weather-resistant DSLR camera. The 24.2MP sensor delivers exceptional image quality even in low light, while the reinforced body withstands the rigors of outdoor photography.",
+        "price": 899.99,
+        "features": [
+          "24.2MP APS-C sensor",
+          "Weather-resistant body",
+          "4K video recording",
+          "Dual SD card slots",
+          "Wi-Fi and Bluetooth connectivity"
+        ]
+      },
+      {
+        "id": "thermos-001",
+        "name": "HeatKeeper Insulated Food Container",
+        "description": "Enjoy hot meals anywhere with this vacuum-insulated food container. The wide mouth accommodates easy eating directly from the container, while the 18/8 stainless steel construction prevents flavors from lingering after washing.",
+        "price": 29.95,
+        "features": [
+          "16-ounce capacity",
+          "Keeps food hot for 7 hours",
+          "Wide mouth design",
+          "18/8 stainless steel construction",
+          "Folding spork included"
+        ]
+      },
+      {
+        "id": "carabiner-001",
+        "name": "AlpineClimb Locking Carabiners",
+        "description": "These versatile locking carabiners serve multiple purposes from securing gear to your pack to emergency repairs. The aircraft-grade aluminum construction ensures strength while keeping weight to a minimum.",
+        "price": 19.95,
+        "features": [
+          "Set of 3 carabiners",
+          "Aircraft-grade aluminum",
+          "Screwgate locking mechanism",
+          "22kN breaking strength",
+          "Multiple color options"
+        ]
+      },
+      {
+        "id": "rain-cover-001",
+        "name": "StormGuard Backpack Rain Cover",
+        "description": "Protect your pack and its contents from heavy downpours with this fully waterproof rain cover. The elastic edges ensure a secure fit on packs from 30-50 liters, while the reflective logo enhances visibility in low light conditions.",
+        "price": 29.95,
+        "features": [
+          "Fits packs 30-50 liters",
+          "Ripstop waterproof fabric",
+          "Elastic securing system",
+          "Reflective logo",
+          "Includes stuff sack"
+        ]
+      },
+      {
+        "id": "camp-shower-001",
+        "name": "SolarStream Portable Shower",
+        "description": "Enjoy the luxury of a hot shower in the backcountry with this solar-heated portable shower. The black material absorbs sunlight to heat water up to 110°F (depending on conditions), while the 5-gallon capacity provides ample water for cleaning up after a long day on the trail.",
+        "price": 34.95,
+        "features": [
+          "5-gallon capacity",
+          "Solar heating technology",
+          "Adjustable flow showerhead",
+          "Temperature indicator",
+          "Rolls up for compact storage"
+        ]
+      },
+      {
+        "id": "vest-001",
+        "name": "ThermaCore Insulated Vest",
+        "description": "This versatile insulated vest provides core warmth without restricting arm movement. The synthetic fill insulates even when damp, while the DWR finish sheds light precipitation. Perfect as a mid-layer or standalone piece in milder conditions.",
+        "price": 89.95,
+        "features": [
+          "Synthetic insulation",
+          "DWR water-repellent finish",
+          "Two zippered hand pockets",
+          "Internal chest pocket",
+          "Adjustable hem"
+        ]
+      },
+      {
+        "id": "mug-001",
+        "name": "SipMaster Insulated Camp Mug",
+        "description": "Keep your coffee hot and your hands comfortable with this double-wall insulated camp mug. The spill-resistant lid allows confident use around the campfire, while the powder-coated finish resists scratches and fading.",
+        "price": 24.95,
+        "features": [
+          "14-ounce capacity",
+          "Double-wall vacuum insulation",
+          "Spill-resistant lid",
+          "Powder-coated finish",
+          "Comfortable handle"
+        ]
+      },
+      {
+        "id": "mosquito-net-001",
+        "name": "BugBarrier Mosquito Head Net",
+        "description": "Protect yourself from insects while maintaining visibility with this ultralight mosquito head net. The fine mesh blocks even no-see-ums while the black color around the face improves visibility. The included stuff sack makes storage simple.",
+        "price": 14.95,
+        "features": [
+          "Ultrafine mesh (600 holes per square inch)",
+          "Black face panel for visibility",
+          "Elastic neck opening",
+          "Weighs less than 1 ounce",
+          "Includes stuff sack"
+        ]
+      },
+      {
+        "id": "rope-001",
+        "name": "MultiTask Utility Cord Set",
+        "description": "This versatile set includes three lengths of paracord-style utility cord perfect for gear repairs, clotheslines, food hanging, and other campsite tasks. The reflective tracer makes the cord visible at night with a headlamp.",
+        "price": 19.95,
+        "features": [
+          "Set of 3 lengths (10ft, 25ft, 50ft)",
+          "550lb breaking strength",
+          "Reflective tracer strand",
+          "Multiple color options",
+          "Includes stuff sack"
+        ]
+      },
+      {
+        "id": "camera-003",
+        "name": "SummitCam Action Camera",
+        "description": "Capture point-of-view video of your adventures with this compact action camera featuring 4K60 video and advanced electronic stabilization. The rugged waterproof design withstands submersion to 33 feet without requiring a separate housing.",
+        "price": 299.95,
+        "features": [
+          "4K60 video recording",
+          "Advanced electronic stabilization",
+          "Waterproof to 33 feet",
+          "Voice control capability",
+          "Wi-Fi and Bluetooth connectivity"
+        ]
+      },
+      {
+        "id": "light-001",
+        "name": "LuminAir Inflatable Solar Lantern",
+        "description": "This innovative solar lantern inflates to create a diffused light perfect for camp use. The built-in solar panel charges the battery during the day, providing up to 12 hours of light on a single charge. When not in use, it collapses flat for easy packing.",
+        "price": 24.95,
+        "features": [
+          "75 lumens output",
+          "Built-in solar panel",
+          "12-hour runtime on full charge",
+          "Three brightness settings",
+          "Collapses flat for packing"
+        ]
+      }
+    ]
