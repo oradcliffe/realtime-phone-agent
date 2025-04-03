@@ -177,7 +177,30 @@ For the application to work correctly, you need to set up an Azure AI Search ind
 
 After successfully deploying your application, you need to configure these additional components:
 
-### 1. Configure Event Grid for Call Notification
+### 1. Grant Azure AI Search Permissions
+
+Your App Service needs permissions to access your Azure AI Search index:
+
+```bash
+# Get the principal ID of the App Service's managed identity
+PRINCIPAL_ID=$(az webapp identity show --name your-app-name --resource-group call-automation-demo-rg --query principalId --output tsv)
+
+# Grant Search Index Reader role on the Azure AI Search resource
+az role assignment create \
+  --assignee $PRINCIPAL_ID \
+  --role "Search Index Reader" \
+  --scope /subscriptions/your-subscription-id/resourceGroups/your-resource-group/providers/Microsoft.Search/searchServices/your-search-service-name
+```
+
+Alternatively, through the Azure Portal:
+1. Go to your Azure AI Search resource
+2. Select "Access control (IAM)" → "Add" → "Add role assignment"
+3. Choose "Search Index Reader" role
+4. Under "Assign access to," select "Managed identity"
+5. Click "Select members" and choose your App Service's managed identity
+6. Complete the assignment
+
+### 2. Configure Event Grid for Call Notification
 
 1. Go to your **Azure Communication Services** resource in the Azure portal
 2. Select **Events** from the left navigation menu
@@ -196,7 +219,7 @@ After successfully deploying your application, you need to configure these addit
    - Your application should respond correctly if it's running
    - Check the Event Grid subscription status to ensure it shows as "Active"
 
-### 2. Test Your Deployment
+### 3. Test Your Deployment
 
 1. **Make a test call** to your ACS phone number
 2. **Monitor the logs** to see the interaction:
@@ -209,7 +232,7 @@ After successfully deploying your application, you need to configure these addit
    - Azure OpenAI realtime model responds
    - Azure AI Search results are returned when asking about products
 
-### 3. Set Up Application Insights (Optional)
+### 4. Set Up Application Insights (Optional)
 
 For better monitoring and diagnostics:
 
