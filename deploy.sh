@@ -176,26 +176,29 @@ else
 fi
 
 # Create an App Service plan
-echo "Creating App Service plan..."
+echo "Creating App Service plan in $LOCATION..."
 if [ -n "$tags" ]; then
-  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux --tags $tags
+  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --location $LOCATION --sku B1 --is-linux --tags $tags
 else
-  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux
+  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --location $LOCATION --sku B1 --is-linux
 fi
 
 # Create a web app
-echo "Creating web app..."
+echo "Creating web app in $LOCATION..."
 if [ -n "$tags" ]; then
-  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --tags $tags
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --location $LOCATION --tags $tags
 else
-  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --location $LOCATION
 fi
 
-# Configure the web app for proper Python package installation
-echo "Configuring Python settings for the web app..."
+# Make sure startup.sh is executable
+echo "Making startup script executable..."
+chmod +x startup.sh
+
+# Configure the web app to skip automated Oryx build
+echo "Configuring web app settings..."
 az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GROUP --settings \
-  SCM_DO_BUILD_DURING_DEPLOYMENT=true \
-  ENABLE_ORYX_BUILD=true
+  SCM_DO_BUILD_DURING_DEPLOYMENT=false
 
 # Enable managed identity for the web app
 echo "Enabling managed identity..."
@@ -221,9 +224,9 @@ az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GRO
 echo "Enabling WebSockets..."
 az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-sockets-enabled true
 
-# Set startup command - updated to use Python 3.10 environment directly
+# Set the startup command to use our custom startup script
 echo "Setting startup command..."
-az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "python -m hypercorn call_automation:app --bind 0.0.0.0:8000"
+az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "/home/site/wwwroot/startup.sh"
 
 # Create temp directory for zip
 echo "Preparing application for deployment..."
@@ -264,10 +267,10 @@ az webapp deploy \
   --type zip \
   --target-path "/home/site/wwwroot" \
   --timeout 300 \
-  --clean true
+  --async true
 
-# Add a small wait to allow deployment to complete
-echo "Waiting for deployment to complete..."
+# Add a small wait to allow async deployment to start
+echo "Waiting for deployment to start..."
 sleep 30
 
 # Restart the web app to ensure all settings are applied
