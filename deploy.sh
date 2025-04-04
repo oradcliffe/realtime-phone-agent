@@ -126,8 +126,8 @@ echo "Granting the current user Key Vault Secrets Officer role..."
 az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Secrets Officer" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
 
 # Wait for RBAC role assignment to propagate (this is important!)
-echo "Waiting 15 seconds for RBAC role assignment to propagate..."
-sleep 15
+echo "Waiting 30 seconds for RBAC role assignment to propagate..."
+sleep 30
 
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
@@ -155,12 +155,15 @@ if [ -f .env ]; then
     echo "Adding secret: $secret_name"
     # Try to set the secret, and if it fails, provide more detailed error
     if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"; then
-      echo "Failed to set secret $secret_name. This could be due to RBAC role assignments still propagating."
-      echo "Waiting another 30 seconds for role assignments to fully propagate..."
+      echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
       sleep 30
       echo "Retrying secret creation..."
       az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"
     fi
+    
+    # Add a 10-second delay between secret creations to avoid rate limiting
+    echo "Waiting 10 seconds before adding the next secret..."
+    sleep 10
   done < .env
 else
   echo ".env file not found. Please create it first."
@@ -190,9 +193,7 @@ az webapp identity assign --name $APP_NAME --resource-group $RESOURCE_GROUP
 # Get the principal ID of the web app's managed identity
 PRINCIPAL_ID=$(az webapp identity show --name $APP_NAME --resource-group $RESOURCE_GROUP --query principalId --output tsv)
 
-# Check if Key Vault is using RBAC
-is_rbac=$(az keyvault show --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --query "properties.enableRbacAuthorization" -o tsv)
-# Since we're using RBAC, we'll always grant RBAC roles
+# Grant Key Vault Secrets User role to the web app's managed identity
 echo "Granting Key Vault Secrets User role to the web app's managed identity..."
 az role assignment create --assignee $PRINCIPAL_ID --role "Key Vault Secrets User" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
 
@@ -213,10 +214,39 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-soc
 echo "Setting startup command..."
 az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "startup.txt"
 
-# Deploy the code - using ZIP deployment for reliability
+# Create temp directory for zip
+echo "Preparing application for deployment..."
+mkdir -p temp_deploy
+
+# Create a zip file in the temp directory
+echo "Creating deployment package..."
+# Check if zip command is available
+if command -v zip &> /dev/null; then
+  # Create a zip of the current directory contents
+  zip -r temp_deploy/app.zip .
+else
+  echo "zip command not found. Please install zip or use an environment where zip is available."
+  exit 1
+fi
+
+# Deploy the application using the newer az webapp deploy command
 echo "Deploying the application..."
-zip -r deployment.zip .
-az webapp deployment source config-zip --resource-group $RESOURCE_GROUP --name $APP_NAME --src deployment.zip
+# Use specific target path to avoid subfolder issues
+az webapp deploy \
+  --resource-group $RESOURCE_GROUP \
+  --name $APP_NAME \
+  --src-path "temp_deploy/app.zip" \
+  --type zip \
+  --target-path "/home/site/wwwroot" \
+  --timeout 300 \
+  --async true
+
+# Add a small wait to allow async deployment to start
+echo "Waiting for deployment to start..."
+sleep 10
+
+echo "Cleaning up temporary files..."
+rm -rf temp_deploy
 
 # Display the application URL
 echo "Deployment completed. Your application is available at:"
