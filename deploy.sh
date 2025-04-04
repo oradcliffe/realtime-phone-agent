@@ -52,6 +52,58 @@ else
   echo "Using location: $LOCATION"
 fi
 
+# Ask for tags
+echo "Would you like to add tags to your resources? Tags help with resource organization and cost tracking."
+read -p "Add tags to resources? (y/n): " add_tags
+
+if [ "$add_tags" == "y" ] || [ "$add_tags" == "Y" ]; then
+  # Initialize tags string
+  tags=""
+  
+  # Collect default tags
+  echo "Let's add some common tags:"
+  
+  # Environment tag
+  read -p "Environment (e.g., dev, test, prod) [prod]: " env_tag
+  env_tag=${env_tag:-prod}
+  tags="Environment=$env_tag"
+  
+  # Project tag
+  read -p "Project name [call-automation]: " project_tag
+  project_tag=${project_tag:-call-automation}
+  tags="$tags Project=$project_tag"
+  
+  # Owner tag
+  read -p "Owner (e.g., team name or email) [ai-team]: " owner_tag
+  owner_tag=${owner_tag:-ai-team}
+  tags="$tags Owner=$owner_tag"
+  
+  # Ask for additional custom tags
+  read -p "Would you like to add custom tags? (y/n): " add_custom_tags
+  
+  if [ "$add_custom_tags" == "y" ] || [ "$add_custom_tags" == "Y" ]; then
+    custom_tags_done=false
+    
+    while [ "$custom_tags_done" == "false" ]; do
+      read -p "Enter tag key: " tag_key
+      read -p "Enter tag value: " tag_value
+      
+      # Add to existing tags
+      tags="$tags $tag_key=$tag_value"
+      
+      read -p "Add another custom tag? (y/n): " add_another
+      if [ "$add_another" != "y" ] && [ "$add_another" != "Y" ]; then
+        custom_tags_done=true
+      fi
+    done
+  fi
+  
+  echo "Using tags: $tags"
+else
+  tags=""
+  echo "No tags will be applied."
+fi
+
 # Variables
 APP_SERVICE_PLAN="call-automation-plan"
 APP_NAME="call-automation-app-$RANDOM"
@@ -60,7 +112,11 @@ KEYVAULT_NAME="callautomation-kv-$RANDOM"
 
 # Create a Key Vault with RBAC authorization
 echo "Creating Azure Key Vault..."
-az keyvault create --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --enable-rbac-authorization true
+if [ -n "$tags" ]; then
+  az keyvault create --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --enable-rbac-authorization true --tags $tags
+else
+  az keyvault create --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --enable-rbac-authorization true
+fi
 
 # Get the current user's Object ID for RBAC assignment
 USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
@@ -105,11 +161,19 @@ fi
 
 # Create an App Service plan
 echo "Creating App Service plan..."
-az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux
+if [ -n "$tags" ]; then
+  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux --tags $tags
+else
+  az appservice plan create --name $APP_SERVICE_PLAN --resource-group $RESOURCE_GROUP --sku B1 --is-linux
+fi
 
 # Create a web app
 echo "Creating web app..."
-az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
+if [ -n "$tags" ]; then
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --tags $tags
+else
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
+fi
 
 # Enable managed identity for the web app
 echo "Enabling managed identity..."
@@ -153,6 +217,11 @@ echo "https://$APP_NAME.azurewebsites.net"
 # Display Key Vault info
 echo "Azure Key Vault created: $KEYVAULT_NAME"
 echo "Key Vault URL: https://$KEYVAULT_NAME.vault.azure.net/"
+
+# Applied tags summary
+if [ -n "$tags" ]; then
+  echo "Applied tags to resources: $tags"
+fi
 
 # Remind about Azure AI Search permissions
 echo "IMPORTANT: Don't forget to grant the App Service managed identity access to your Azure AI Search resource:"
