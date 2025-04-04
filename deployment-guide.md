@@ -68,6 +68,32 @@ Before deploying, ensure you have the following:
      - Cosmos DB
      - Or other supported data sources
 
+## Permission Model Overview
+
+The application requires specific permissions between services. Here's a summary of required permissions and best practices:
+
+### Required Permissions
+
+1. **App Service → Key Vault**:
+   - The App Service needs to read secrets from Key Vault
+   - **Best practice**: Use Managed Identity with "Key Vault Secrets User" role
+
+2. **App Service → Azure AI Search**:
+   - The App Service needs to query the search index
+   - **Best practice**: Use Managed Identity with "Search Index Reader" role
+
+3. **Azure AI Search → Blob Storage** (for data ingestion):
+   - Search needs to read data from Blob Storage for indexing
+   - **Best practice**: Use Managed Identity with "Storage Blob Data Reader" role
+
+### Implementation in this Solution
+
+- The deployment script automatically sets up the App Service → Key Vault permissions
+- You must manually configure the App Service → Azure AI Search permissions (see Post-Deployment Steps)
+- If using blob storage for indexing, you'll need to configure Azure AI Search → Blob Storage permissions separately
+
+Using Managed Identities throughout provides the best balance of security and ease of management without requiring credential rotation.
+
 ## Setting up Azure AI Search Index
 
 For the application to work correctly, you need to set up an Azure AI Search index with the appropriate schema:
@@ -114,41 +140,41 @@ For the application to work correctly, you need to set up an Azure AI Search ind
        ```
      - This combination of configuration and query-time settings enables the full semantic search capability
 
-4. **Import product data** into your index using one of these methods:
-   - **Using the portal**:
-     - Go to "Import data" in your search service
-     - Select source (Blob storage, SQL, etc.)
-     - Map fields to your index structure
-     - Run the import
+4. **Setting up the Azure AI Search Indexer**
 
-   - **Using code**:
-     ```python
-     from azure.search.documents import SearchClient
-     from azure.core.credentials import AzureKeyCredential
-     
-     search_client = SearchClient(
-         endpoint="your-search-endpoint",
-         index_name="products",
-         credential=AzureKeyCredential("your-search-key")
-     )
-     
-     products = [
-         {
-             "id": "camera1",
-             "name": "Pro X Camera",
-             "description": "Professional-grade digital camera with 50MP resolution",
-             "price": 1299.99,
-             "features": ["50MP resolution", "8K video", "Weather-sealed body"]
-         },
-         # Add more products...
-     ]
-     
-     search_client.upload_documents(products)
-     ```
+   After creating your index and configuring semantic search, you'll need to set up an indexer to populate your index with product data:
 
-   - **Using Postman or other REST tools** to directly call the Search API
+   ### Creating an Indexer for JSON Array Data
 
-5. **Verify your index is working** by testing a few queries in the Azure portal's Search explorer
+   1. **Upload your JSON data file**:
+      - Upload the `products.json.example` file to an Azure Blob Storage container
+      - Make note of the storage account name, container name, and blob name
+
+   2. **Create a data source**:
+      - In your Azure AI Search service, go to "Data sources" → "Add data source"
+      - Select "Azure Blob Storage" as the source
+      - Connect to your storage account using a connection string or managed identity
+      - Select the container where you uploaded the JSON file
+
+   3. **Configure parsing mode**:
+      - In the "Parser configuration" section, set:
+        - **Parsing mode**: JSON array
+        - **Document root**: Leave blank (to process the entire array)
+        - This tells the indexer that your file contains a JSON array with multiple objects
+
+   4. **Create the indexer**:
+      - Give your indexer a name
+      - Set an appropriate schedule (or run once for initial load)
+
+   5. **Run the indexer**:
+      - Once configured, run the indexer to populate your index
+      - Monitor the indexer status to ensure all documents are successfully processed
+
+   ### Indexer Permissions
+
+   If using managed identity (recommended), ensure your Azure AI Search service has been granted at least "Storage Blob Data Reader" role on the blob storage account or container where your product data resides.
+
+**Verify your index is working** by testing a few queries in the Azure portal's Search explorer
 
 ## Deployment Steps
 
