@@ -3,6 +3,7 @@
 
 # Deployment files
 deployment.zip
+temp_deploy/
 
 # Python cache and compiled files
 __pycache__/

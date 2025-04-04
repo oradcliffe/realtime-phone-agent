@@ -132,28 +132,33 @@ sleep 30
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
 if [ -f .env ]; then
-  # Read the file line by line
+  # Read the file line by line, preserving quotes and special characters
   while IFS= read -r line || [ -n "$line" ]; do
     # Skip empty lines and comments
     if [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]]; then
       continue
     fi
     
-    # Extract key and value - handle the case where the value might contain = signs
+    # Extract key (part before first = sign)
     key=$(echo "$line" | cut -d '=' -f1)
-    value=$(echo "$line" | cut -d '=' -f2-)
+    
+    # Extract value (everything after first = sign)
+    value="${line#*=}"
     
     # Trim whitespace from key
     key=$(echo "$key" | xargs)
     
-    # Remove surrounding quotes if present (both single and double)
-    value=$(echo "$value" | sed -e "s/^['\"]//; s/['\"]$//")
+    # Handle value carefully to preserve all characters
+    # Remove only the very first and last quote if they're both present
+    if [[ "$value" == "'"*"'" ]] || [[ "$value" == "\""*"\"" ]]; then
+      value="${value:1:${#value}-2}"
+    fi
     
     # Convert environment variable names to Key Vault secret names (replace _ with -)
     secret_name=$(echo "$key" | tr '_' '-')
     
     echo "Adding secret: $secret_name"
-    # Try to set the secret, and if it fails, provide more detailed error
+    # Try to set the secret with full value, and if it fails, provide more detailed error
     if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"; then
       echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
       sleep 30
@@ -218,12 +223,26 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup
 echo "Preparing application for deployment..."
 mkdir -p temp_deploy
 
-# Create a zip file in the temp directory
+# Create a list of files to exclude from deployment
+echo "Creating deployment package..."
+cat > temp_deploy/exclude.txt << EOL
+.env*
+.git/
+.gitignore
+deploy.sh
+deployment-guide.md
+LICENSE
+products.json.example
+README.md
+temp_deploy/
+EOL
+
+# Create a zip file in the temp directory, excluding unnecessary files
 echo "Creating deployment package..."
 # Check if zip command is available
 if command -v zip &> /dev/null; then
-  # Create a zip of the current directory contents
-  zip -r temp_deploy/app.zip .
+  # Create a zip of the current directory contents, excluding specified files
+  zip -r temp_deploy/app.zip . -x@temp_deploy/exclude.txt
 else
   echo "zip command not found. Please install zip or use an environment where zip is available."
   exit 1
