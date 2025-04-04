@@ -31,10 +31,25 @@ fi
 # Get user's location for resources if needed
 if [ "$use_existing_rg" == "y" ] || [ "$use_existing_rg" == "Y" ]; then
   # Get the location from the existing resource group
-  LOCATION=$(az group show --name "$RESOURCE_GROUP" --query "location" -o tsv)
-  echo "Using location: $LOCATION"
+  RG_LOCATION=$(az group show --name "$RESOURCE_GROUP" --query "location" -o tsv)
+  echo "The resource group is in location: $RG_LOCATION"
+  
+  # Ask if user wants to use the same location
+  read -p "Do you want to use the same location for new resources? (y/n): " use_same_location
+  
+  if [ "$use_same_location" == "y" ] || [ "$use_same_location" == "Y" ]; then
+    LOCATION=$RG_LOCATION
+    echo "Using location: $LOCATION"
+  else
+    echo "Example locations: eastus, eastus2, westus2, centralus, northeurope, westeurope"
+    read -p "Enter the location for new resources: " LOCATION
+    echo "Using custom location: $LOCATION"
+  fi
 else
-  LOCATION="eastus2"
+  echo "Example locations: eastus, eastus2, westus2, centralus, northeurope, westeurope"
+  read -p "Enter the location for new resources (default is eastus2): " input_location
+  LOCATION=${input_location:-eastus2}
+  echo "Using location: $LOCATION"
 fi
 
 # Variables
@@ -43,14 +58,20 @@ APP_NAME="call-automation-app-$RANDOM"
 RUNTIME="PYTHON:3.10"
 KEYVAULT_NAME="callautomation-kv-$RANDOM"
 
-# Create a Key Vault
+# Create a Key Vault with RBAC authorization
 echo "Creating Azure Key Vault..."
-az keyvault create --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION
+az keyvault create --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --enable-rbac-authorization true
 
-# Elevate permissions for the current user
-echo "Granting the current user permissions to manage secrets..."
+# Get the current user's Object ID for RBAC assignment
 USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
-az keyvault set-policy --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --object-id $USER_OBJECT_ID --secret-permissions get list set delete backup restore recover purge
+
+# Grant the current user Key Vault Secrets Officer role for managing secrets
+echo "Granting the current user Key Vault Secrets Officer role..."
+az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Secrets Officer" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
+
+# Wait for RBAC role assignment to propagate (this is important!)
+echo "Waiting 15 seconds for RBAC role assignment to propagate..."
+sleep 15
 
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
@@ -68,7 +89,14 @@ if [ -f .env ]; then
     secret_name=$(echo $key | tr '_' '-')
     
     echo "Adding secret: $secret_name"
-    az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"
+    # Try to set the secret, and if it fails, provide more detailed error
+    if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"; then
+      echo "Failed to set secret $secret_name. This could be due to RBAC role assignments still propagating."
+      echo "Waiting another 30 seconds for role assignments to fully propagate..."
+      sleep 30
+      echo "Retrying secret creation..."
+      az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"
+    fi
   done < .env
 else
   echo ".env file not found. Please create it first."
@@ -90,9 +118,11 @@ az webapp identity assign --name $APP_NAME --resource-group $RESOURCE_GROUP
 # Get the principal ID of the web app's managed identity
 PRINCIPAL_ID=$(az webapp identity show --name $APP_NAME --resource-group $RESOURCE_GROUP --query principalId --output tsv)
 
-# Grant the web app access to Key Vault
-echo "Granting Key Vault access to web app..."
-az keyvault set-policy --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --object-id $PRINCIPAL_ID --secret-permissions get list
+# Check if Key Vault is using RBAC
+is_rbac=$(az keyvault show --name $KEYVAULT_NAME --resource-group $RESOURCE_GROUP --query "properties.enableRbacAuthorization" -o tsv)
+# Since we're using RBAC, we'll always grant RBAC roles
+echo "Granting Key Vault Secrets User role to the web app's managed identity..."
+az role assignment create --assignee $PRINCIPAL_ID --role "Key Vault Secrets User" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
 
 # Set Key Vault reference app settings
 echo "Setting Key Vault reference app settings..."
