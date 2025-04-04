@@ -132,26 +132,34 @@ sleep 15
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
 if [ -f .env ]; then
-  while IFS='=' read -r key value || [ -n "$key" ]; do
+  # Read the file line by line
+  while IFS= read -r line || [ -n "$line" ]; do
     # Skip empty lines and comments
-    if [[ -z "$key" || "$key" =~ ^# ]]; then
+    if [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]]; then
       continue
     fi
     
-    # Remove surrounding quotes if present
-    value=$(echo $value | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")
+    # Extract key and value - handle the case where the value might contain = signs
+    key=$(echo "$line" | cut -d '=' -f1)
+    value=$(echo "$line" | cut -d '=' -f2-)
+    
+    # Trim whitespace from key
+    key=$(echo "$key" | xargs)
+    
+    # Remove surrounding quotes if present (both single and double)
+    value=$(echo "$value" | sed -e "s/^['\"]//; s/['\"]$//")
     
     # Convert environment variable names to Key Vault secret names (replace _ with -)
-    secret_name=$(echo $key | tr '_' '-')
+    secret_name=$(echo "$key" | tr '_' '-')
     
     echo "Adding secret: $secret_name"
     # Try to set the secret, and if it fails, provide more detailed error
-    if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"; then
+    if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"; then
       echo "Failed to set secret $secret_name. This could be due to RBAC role assignments still propagating."
       echo "Waiting another 30 seconds for role assignments to fully propagate..."
       sleep 30
       echo "Retrying secret creation..."
-      az keyvault secret set --vault-name $KEYVAULT_NAME --name $secret_name --value "$value"
+      az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"
     fi
   done < .env
 else
