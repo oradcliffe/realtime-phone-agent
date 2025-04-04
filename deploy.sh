@@ -186,9 +186,9 @@ fi
 # Create a web app
 echo "Creating web app in $LOCATION..."
 if [ -n "$tags" ]; then
-  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --location $LOCATION --tags $tags
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --tags $tags
 else
-  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --location $LOCATION
+  az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
 fi
 
 # Make sure startup.sh is executable
