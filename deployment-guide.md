@@ -45,6 +45,10 @@ Before deploying, ensure you have the following:
    - Azure CLI installed and authenticated (`az login`)
    - Git (optional, for version control)
    - Bash shell (or similar for running the deployment script)
+   - `zip` command installed
+     - This is required for creating the deployment package
+     - Most Linux distributions and macOS have this installed by default
+     - For Windows, use WSL or install via GnuWin32
 
 4. **Configuration**:
    - A `.env` file with the following variables:
