@@ -148,10 +148,12 @@ if [ -f .env ]; then
     # Trim whitespace from key
     key=$(echo "$key" | xargs)
     
-    # Handle value carefully to preserve all characters
-    # Remove only the very first and last quote if they're both present
-    if [[ "$value" == "'"*"'" ]] || [[ "$value" == "\""*"\"" ]]; then
+    # Remove surrounding quotes of any kind (single or double)
+    # This pattern handles both types of quotes and ensures they're only removed if they're at beginning and end
+    if [[ "$value" =~ ^[\'\"].*[\'\"]$ ]]; then
+      # Remove first and last characters if they are quotes
       value="${value:1:${#value}-2}"
+      echo "Removed surrounding quotes from value"
     fi
     
     # Convert environment variable names to Key Vault secret names (replace _ with -)
