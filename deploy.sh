@@ -191,6 +191,12 @@ else
   az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
 fi
 
+# Configure the web app for proper Python package installation
+echo "Configuring Python settings for the web app..."
+az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GROUP --settings \
+  SCM_DO_BUILD_DURING_DEPLOYMENT=true \
+  ENABLE_ORYX_BUILD=true
+
 # Enable managed identity for the web app
 echo "Enabling managed identity..."
 az webapp identity assign --name $APP_NAME --resource-group $RESOURCE_GROUP
@@ -215,9 +221,9 @@ az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GRO
 echo "Enabling WebSockets..."
 az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-sockets-enabled true
 
-# Set startup command
+# Set startup command - updated to use Python 3.10 environment directly
 echo "Setting startup command..."
-az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "startup.txt"
+az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "python -m hypercorn call_automation:app --bind 0.0.0.0:8000"
 
 # Create temp directory for zip
 echo "Preparing application for deployment..."
@@ -258,11 +264,15 @@ az webapp deploy \
   --type zip \
   --target-path "/home/site/wwwroot" \
   --timeout 300 \
-  --async true
+  --clean true
 
-# Add a small wait to allow async deployment to start
-echo "Waiting for deployment to start..."
-sleep 10
+# Add a small wait to allow deployment to complete
+echo "Waiting for deployment to complete..."
+sleep 30
+
+# Restart the web app to ensure all settings are applied
+echo "Restarting the web app..."
+az webapp restart --name $APP_NAME --resource-group $RESOURCE_GROUP
 
 echo "Cleaning up temporary files..."
 rm -rf temp_deploy
