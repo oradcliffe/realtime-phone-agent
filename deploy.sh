@@ -265,7 +265,7 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-soc
 
 # Set the startup command to use our custom startup script
 echo "Setting startup command..."
-az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-command "/home/site/wwwroot/startup.sh"
+az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "/home/site/wwwroot/startup.sh"
 
 # Create temp directory for zip
 echo "Preparing application for deployment..."
