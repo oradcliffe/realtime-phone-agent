@@ -252,7 +252,8 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-soc
 
 # Set the startup command to use our custom startup script
 echo "Setting startup command..."
-az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-file "/home/site/wwwroot/startup.sh"
+# Set a simple startup command that works with our web.config
+az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-command "python -m hypercorn call_automation:app --bind 0.0.0.0:8000"
 
 # Create temp directory for zip
 echo "Preparing application for deployment..."
@@ -286,12 +287,10 @@ fi
 # Deploy the application
 echo "Deploying the application..."
 # Use specific target path to avoid subfolder issues
-az webapp deploy \
+az webapp deployment source config-zip \
   --resource-group $RESOURCE_GROUP \
   --name $APP_NAME \
-  --src-path "temp_deploy/app.zip" \
-  --type zip \
-  --target-path "/home/site/wwwroot"
+  --src "temp_deploy/app.zip"
 
 # Verify deployment status
 echo "Verifying deployment status..."
