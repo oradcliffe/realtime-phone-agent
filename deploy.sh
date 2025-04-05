@@ -217,14 +217,24 @@ else
   az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME
 fi
 
-# Make sure startup.sh is executable
-echo "Making startup script executable..."
-chmod +x startup.sh
-
 # Configure the web app to skip automated Oryx build
 echo "Configuring web app settings..."
 az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GROUP --settings \
   SCM_DO_BUILD_DURING_DEPLOYMENT=false
+
+# Create Application Insights resource
+echo "Creating Application Insights resource..."
+APPINSIGHTS_NAME="call-automation-insights-$DEPLOYMENT_SUFFIX"
+
+if [ -n "$tags" ]; then
+  az monitor app-insights component create --app $APPINSIGHTS_NAME --location $LOCATION --resource-group $RESOURCE_GROUP --application-type web --tags $tags
+else
+  az monitor app-insights component create --app $APPINSIGHTS_NAME --location $LOCATION --resource-group $RESOURCE_GROUP --application-type web
+fi
+
+# Get the instrumentation key and connection string
+APPINSIGHTS_KEY=$(az monitor app-insights component show --app $APPINSIGHTS_NAME --resource-group $RESOURCE_GROUP --query instrumentationKey -o tsv)
+APPINSIGHTS_CONNECTION_STRING=$(az monitor app-insights component show --app $APPINSIGHTS_NAME --resource-group $RESOURCE_GROUP --query connectionString -o tsv)
 
 # Enable managed identity for the web app
 echo "Enabling managed identity..."
@@ -244,7 +254,10 @@ az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GRO
 
 # Create a special setting for the callback URL (which isn't a secret but needs to be the app's URL)
 az webapp config appsettings set --name $APP_NAME --resource-group $RESOURCE_GROUP --settings \
-  "CALLBACK_URI_HOST=https://$APP_NAME.azurewebsites.net"
+  "CALLBACK_URI_HOST=https://$APP_NAME.azurewebsites.net" \
+  "APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_KEY" \
+  "APPLICATIONINSIGHTS_CONNECTION_STRING=$APPINSIGHTS_CONNECTION_STRING" \
+  "ApplicationInsightsAgent_EXTENSION_VERSION=~3"
 
 # Set WebSocket enabling configuration
 echo "Enabling WebSockets..."
@@ -252,8 +265,7 @@ az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --web-soc
 
 # Set the startup command to use our custom startup script
 echo "Setting startup command..."
-# Set a simple startup command that works with our web.config
-az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-command "python -m hypercorn call_automation:app --bind 0.0.0.0:8000"
+az webapp config set --name $APP_NAME --resource-group $RESOURCE_GROUP --startup-command "/home/site/wwwroot/startup.sh"
 
 # Create temp directory for zip
 echo "Preparing application for deployment..."
@@ -286,7 +298,7 @@ fi
 
 # Deploy the application
 echo "Deploying the application..."
-# Use specific target path to avoid subfolder issues
+# Use improved deployment method
 az webapp deployment source config-zip \
   --resource-group $RESOURCE_GROUP \
   --name $APP_NAME \
@@ -340,6 +352,10 @@ echo "https://$APP_NAME.azurewebsites.net"
 # Display Key Vault info
 echo "Azure Key Vault created: $KEYVAULT_NAME"
 echo "Key Vault URL: https://$KEYVAULT_NAME.vault.azure.net/"
+
+# Display Application Insights info
+echo "Application Insights created: $APPINSIGHTS_NAME"
+echo "To view insights, visit: https://portal.azure.com/#resource/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/microsoft.insights/components/$APPINSIGHTS_NAME/overview"
 
 # Applied tags summary
 if [ -n "$tags" ]; then

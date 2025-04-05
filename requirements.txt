@@ -7,3 +7,5 @@ python-dotenv
 azure-identity
 azure-keyvault-secrets
 azure-search-documents
+opencensus-ext-azure
+opencensus-ext-flask
