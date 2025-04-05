@@ -247,7 +247,7 @@ Alternatively, through the Azure Portal:
    - **Name**: IncomingCallEvents (or your preferred name)
    - **Event Schema**: Event Grid Schema
    - **Topic Types**: Azure Communication Services
-   - **Filter to Event Types**: Check "Incoming Call"
+   - **Filter to Event Types**: Check "Incoming Call" - Microsoft.Communication.IncomingCall
    - **Endpoint Type**: Webhook
    - **Endpoint**: https://your-app-name.azurewebsites.net/api/incomingCall
    - Click "Create"
