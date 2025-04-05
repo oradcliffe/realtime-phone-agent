@@ -132,7 +132,7 @@ sleep 30
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
 if [ -f .env ]; then
-  # Read the file line by line, preserving quotes and special characters
+  # Process each line in .env
   while IFS= read -r line || [ -n "$line" ]; do
     # Skip empty lines and comments
     if [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]]; then
@@ -140,32 +140,69 @@ if [ -f .env ]; then
     fi
     
     # Extract key (part before first = sign)
-    key=$(echo "$line" | cut -d '=' -f1)
+    key=$(echo "$line" | cut -d '=' -f1 | xargs)
     
-    # Extract value (everything after first = sign)
-    value="${line#*=}"
+    # Extract value using sed to handle quotes properly
+    # This removes everything up to the first = sign, then strips quotes if present
+    value=$(echo "$line" | sed -e "s/^[^=]*=//" -e "s/^['\"]//;s/['\"]$//")
+    
+    # Convert environment variable names to Key Vault secret names
+    secret_name=$(echo "$key" | tr '_' '-')
+    
+    # Print appropriate message
+    echo "Adding secret: $secret_name"
+    
+    # Set the secret in Key Vault
+    if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"; then
+      echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
+      sleep 30
+      echo "Retrying secret creation..."
+      az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"
+    fi
+    
+    # Add a 10-second delay between secret creations to avoid rate limiting
+    echo "Waiting 10 seconds before adding the next secret..."
+    sleep 10
+  done < .env
+else
+  echo ".env file not found. Please create it first."
+  exit 1
+fi "ACS connection string (masked): $debug_value"
+  
+  # Add the secret with special handling
+  echo "Adding ACS-CONNECTION-STRING to Key Vault..."
+  if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "ACS-CONNECTION-STRING" --value "$acs_value"; then
+    echo "Failed to set ACS-CONNECTION-STRING. Retrying in 30 seconds..."
+    sleep 30
+    az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "ACS-CONNECTION-STRING" --value "$acs_value"
+  fi
+  
+  # Process all other secrets
+  while IFS= read -r line || [ -n "$line" ]; do
+    # Skip empty lines, comments, and the ACS line (already processed)
+    if [[ -z "$line" || "$line" =~ ^[[:space:]]*# || "$line" =~ ^ACS_CONNECTION_STRING= ]]; then
+      continue
+    fi
+    
+    # Extract key (part before first = sign)
+    key=$(echo "$line" | cut -d '=' -f1)
     
     # Trim whitespace from key
     key=$(echo "$key" | xargs)
     
-    # Remove surrounding quotes of any kind (single or double)
-    # This pattern handles both types of quotes and ensures they're only removed if they're at beginning and end
-    if [[ "$value" =~ ^[\'\"].*[\'\"]$ ]]; then
-      # Remove first and last characters if they are quotes
-      value="${value:1:${#value}-2}"
-      echo "Removed surrounding quotes from value"
-    fi
+    # Use sed to extract the value and remove quotes in one step
+    value=$(echo "$line" | sed -e "s/^$key=//" -e "s/^['\"]//g" -e "s/['\"]$//g")
     
     # Convert environment variable names to Key Vault secret names (replace _ with -)
     secret_name=$(echo "$key" | tr '_' '-')
     
     echo "Adding secret: $secret_name"
     # Try to set the secret with full value, and if it fails, provide more detailed error
-    if ! az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"; then
+    if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"; then
       echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
       sleep 30
       echo "Retrying secret creation..."
-      az keyvault secret set --vault-name $KEYVAULT_NAME --name "$secret_name" --value "$value"
+      az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"
     fi
     
     # Add a 10-second delay between secret creations to avoid rate limiting
@@ -186,7 +223,7 @@ else
 fi
 
 # Create a web app
-echo "Creating web app in $LOCATION..."
+echo "Creating web app..."
 if [ -n "$tags" ]; then
   az webapp create --name $APP_NAME --resource-group $RESOURCE_GROUP --plan $APP_SERVICE_PLAN --runtime $RUNTIME --tags $tags
 else
