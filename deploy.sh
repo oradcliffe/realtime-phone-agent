@@ -300,11 +300,12 @@ fi
 
 # Deploy the application
 echo "Deploying the application..."
-# Use improved deployment method
-az webapp deployment source config-zip \
+# Use current deployment method
+az webapp deploy \
   --resource-group $RESOURCE_GROUP \
   --name $APP_NAME \
-  --src "temp_deploy/app.zip"
+  --src-path "temp_deploy/app.zip" \
+  --type zip
 
 # Verify deployment status
 echo "Verifying deployment status..."
@@ -314,7 +315,7 @@ DELAY=30
 
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
   ATTEMPT=$((ATTEMPT+1))
-  STATUS=$(az webapp deployment list --name $APP_NAME --resource-group $RESOURCE_GROUP --query "[0].status" -o tsv 2>/dev/null)
+  STATUS=$(az webapp deploy show --name $APP_NAME --resource-group $RESOURCE_GROUP --query "status" -o tsv 2>/dev/null)
   
   if [ "$STATUS" = "Success" ]; then
     echo "✓ Deployment completed successfully"
