@@ -104,11 +104,20 @@ else
   echo "No tags will be applied."
 fi
 
+# Ask for deployment suffix
+read -p "Enter a deployment suffix (leave blank for timestamp-based suffix): " DEPLOYMENT_SUFFIX
+
+if [ -z "$DEPLOYMENT_SUFFIX" ]; then
+  # Generate timestamp-based suffix
+  DEPLOYMENT_SUFFIX=$(date +"%m%d%H%M")
+  echo "Using timestamp-based suffix: $DEPLOYMENT_SUFFIX"
+fi
+
 # Variables
 APP_SERVICE_PLAN="call-automation-plan"
-APP_NAME="call-automation-app-$RANDOM"
+APP_NAME="call-automation-app-$DEPLOYMENT_SUFFIX"
 RUNTIME="PYTHON:3.10"
-KEYVAULT_NAME="callautomation-kv-$RANDOM"
+KEYVAULT_NAME="callkv$DEPLOYMENT_SUFFIX"
 
 # Create a Key Vault with RBAC authorization
 echo "Creating Azure Key Vault..."
@@ -129,85 +138,63 @@ az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Secrets O
 echo "Waiting 30 seconds for RBAC role assignment to propagate..."
 sleep 30
 
+# Function to properly parse environment variables and add to Key Vault
+add_secret_to_keyvault() {
+  local line="$1"
+  local keyvault_name="$2"
+  
+  # Skip empty lines and comments
+  if [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]]; then
+    return 0
+  fi
+  
+  # Extract key (part before first = sign)
+  local key=$(echo "$line" | cut -d '=' -f1 | xargs)
+  
+  # Skip if key is empty
+  if [[ -z "$key" ]]; then
+    echo "Skipping line with empty key"
+    return 0
+  fi
+  
+  # Extract value using sed to preserve quotes
+  local raw_value=$(echo "$line" | sed -e "s/^$key=//" -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+  
+  # Remove surrounding quotes if present (both ' and ")
+  local value=$(echo "$raw_value" | sed -e 's/^["'\'']//' -e 's/["'\'']$//')
+  
+  # Convert environment variable name to Key Vault secret name
+  local secret_name=$(echo "$key" | tr '_' '-')
+  
+  echo "Adding secret: $secret_name"
+  
+  # Set the secret in Key Vault with proper error handling
+  if ! az keyvault secret set --vault-name "$keyvault_name" --name "$secret_name" --value "$value"; then
+    echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
+    sleep 30
+    echo "Retrying secret creation..."
+    if ! az keyvault secret set --vault-name "$keyvault_name" --name "$secret_name" --value "$value"; then
+      echo "ERROR: Failed to create secret $secret_name after retry. Check Key Vault logs."
+      return 1
+    fi
+  fi
+  
+  # Add a 15-second delay between secret creations to avoid rate limiting
+  echo "Waiting 15 seconds before adding the next secret..."
+  sleep 15
+  
+  return 0
+}
+
 # Add secrets from .env file to Key Vault
 echo "Adding secrets to Key Vault..."
 if [ -f .env ]; then
   # Process each line in .env
   while IFS= read -r line || [ -n "$line" ]; do
-    # Skip empty lines and comments
-    if [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]]; then
-      continue
+    add_secret_to_keyvault "$line" "$KEYVAULT_NAME"
+    if [ $? -ne 0 ]; then
+      echo "WARNING: Failed to add some secrets to Key Vault."
     fi
-    
-    # Extract key (part before first = sign)
-    key=$(echo "$line" | cut -d '=' -f1 | xargs)
-    
-    # Extract value using sed to handle quotes properly
-    # This removes everything up to the first = sign, then strips quotes if present
-    value=$(echo "$line" | sed -e "s/^[^=]*=//" -e "s/^['\"]//;s/['\"]$//")
-    
-    # Convert environment variable names to Key Vault secret names
-    secret_name=$(echo "$key" | tr '_' '-')
-    
-    # Print appropriate message
-    echo "Adding secret: $secret_name"
-    
-    # Set the secret in Key Vault
-    if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"; then
-      echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
-      sleep 30
-      echo "Retrying secret creation..."
-      az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"
-    fi
-    
-    # Add a 10-second delay between secret creations to avoid rate limiting
-    echo "Waiting 10 seconds before adding the next secret..."
-    sleep 10
-  done < .env
-else
-  echo ".env file not found. Please create it first."
-  exit 1
-fi "ACS connection string (masked): $debug_value"
-  
-  # Add the secret with special handling
-  echo "Adding ACS-CONNECTION-STRING to Key Vault..."
-  if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "ACS-CONNECTION-STRING" --value "$acs_value"; then
-    echo "Failed to set ACS-CONNECTION-STRING. Retrying in 30 seconds..."
-    sleep 30
-    az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "ACS-CONNECTION-STRING" --value "$acs_value"
-  fi
-  
-  # Process all other secrets
-  while IFS= read -r line || [ -n "$line" ]; do
-    # Skip empty lines, comments, and the ACS line (already processed)
-    if [[ -z "$line" || "$line" =~ ^[[:space:]]*# || "$line" =~ ^ACS_CONNECTION_STRING= ]]; then
-      continue
-    fi
-    
-    # Extract key (part before first = sign)
-    key=$(echo "$line" | cut -d '=' -f1)
-    
-    # Trim whitespace from key
-    key=$(echo "$key" | xargs)
-    
-    # Use sed to extract the value and remove quotes in one step
-    value=$(echo "$line" | sed -e "s/^$key=//" -e "s/^['\"]//g" -e "s/['\"]$//g")
-    
-    # Convert environment variable names to Key Vault secret names (replace _ with -)
-    secret_name=$(echo "$key" | tr '_' '-')
-    
-    echo "Adding secret: $secret_name"
-    # Try to set the secret with full value, and if it fails, provide more detailed error
-    if ! az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"; then
-      echo "Failed to set secret $secret_name. Retrying in 30 seconds..."
-      sleep 30
-      echo "Retrying secret creation..."
-      az keyvault secret set --vault-name "$KEYVAULT_NAME" --name "$secret_name" --value "$value"
-    fi
-    
-    # Add a 10-second delay between secret creations to avoid rate limiting
-    echo "Waiting 10 seconds before adding the next secret..."
-    sleep 10
   done < .env
 else
   echo ".env file not found. Please create it first."
@@ -296,7 +283,7 @@ else
   exit 1
 fi
 
-# Deploy the application using the newer az webapp deploy command
+# Deploy the application
 echo "Deploying the application..."
 # Use specific target path to avoid subfolder issues
 az webapp deploy \
@@ -304,13 +291,41 @@ az webapp deploy \
   --name $APP_NAME \
   --src-path "temp_deploy/app.zip" \
   --type zip \
-  --target-path "/home/site/wwwroot" \
-  --timeout 300 \
-  --async true
+  --target-path "/home/site/wwwroot"
 
-# Add a small wait to allow async deployment to start
-echo "Waiting for deployment to start..."
-sleep 30
+# Verify deployment status
+echo "Verifying deployment status..."
+MAX_ATTEMPTS=10
+ATTEMPT=0
+DELAY=30
+
+while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+  ATTEMPT=$((ATTEMPT+1))
+  STATUS=$(az webapp deployment list --name $APP_NAME --resource-group $RESOURCE_GROUP --query "[0].status" -o tsv 2>/dev/null)
+  
+  if [ "$STATUS" = "Success" ]; then
+    echo "✓ Deployment completed successfully"
+    break
+  elif [ "$STATUS" = "Failed" ]; then
+    echo "✗ Deployment failed. Check logs for details."
+    echo "You can check logs with: az webapp log tail --name $APP_NAME --resource-group $RESOURCE_GROUP"
+    exit 1
+  else
+    echo "Deployment status: $STATUS. Checking again in $DELAY seconds... (Attempt $ATTEMPT/$MAX_ATTEMPTS)"
+    sleep $DELAY
+  fi
+  
+  if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+    echo "Warning: Deployment is taking longer than expected."
+    read -p "Continue waiting for deployment? (y/n): " continue_waiting
+    if [ "$continue_waiting" == "y" ] || [ "$continue_waiting" == "Y" ]; then
+      MAX_ATTEMPTS=$((MAX_ATTEMPTS+5))
+    else
+      echo "Moving on, but deployment may not be complete."
+      break
+    fi
+  fi
+done
 
 # Restart the web app to ensure all settings are applied
 echo "Restarting the web app..."
