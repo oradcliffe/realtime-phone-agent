@@ -1,4 +1,5 @@
-Quart
+werkzeug==2.2.3
+Quart==0.18.4
 azure-eventgrid
 azure-communication-callautomation==1.4.0b1
 semantic-kernel[realtime]
