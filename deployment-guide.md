@@ -197,12 +197,7 @@ For the application to work correctly, you need to set up an Azure AI Search ind
    - `deploy.sh`
    - `.env` (your environment variables)
 
-3. **Make the deployment script executable**:
-   ```bash
-   chmod +x deploy.sh
-   ```
-
-4. **Run the deployment script**:
+3. **Run the deployment script**:
    ```bash
    ./deploy.sh
    ```
