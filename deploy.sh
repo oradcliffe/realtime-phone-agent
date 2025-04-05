@@ -272,6 +272,7 @@ echo "Preparing application for deployment..."
 mkdir -p temp_deploy
 
 # Create a list of files to exclude from deployment
+# Create a list of files to exclude from deployment
 echo "Creating deployment package..."
 cat > temp_deploy/exclude.txt << EOL
 .env*
@@ -283,6 +284,7 @@ LICENSE
 products.json.example
 README.md
 temp_deploy/
+startup.txt
 EOL
 
 # Create a zip file in the temp directory, excluding unnecessary files
