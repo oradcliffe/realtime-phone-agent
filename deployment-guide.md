@@ -51,17 +51,7 @@ Before deploying, ensure you have the following:
      - For Windows, use WSL or install via GnuWin32
 
 4. **Configuration**:
-   - A `.env` file with the following variables:
-     ```
-     ACS_CONNECTION_STRING=your_acs_connection_string
-     AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
-     AZURE_OPENAI_REALTIME_DEPLOYMENT_NAME=your_deployment_name
-     AZURE_OPENAI_API_VERSION=your_api_version (e.g., 2025-03-01-preview)
-     AZURE_OPENAI_API_KEY=your_api_key
-     AZURE_SEARCH_ENDPOINT=your_search_endpoint
-     AZURE_SEARCH_KEY=your_search_key
-     AZURE_SEARCH_INDEX=your_search_index_name
-     ```
+   - A `.env` file with all required variables filled in (see [.env.example](.env.example) for details)
 
 5. **Product Data**:
    - A populated Azure AI Search index with your product catalog (sample data included in `products.json.example`)
