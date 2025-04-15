@@ -63,10 +63,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 This project is based on code from the [Microsoft Semantic Kernel repository](https://github.com/microsoft/semantic-kernel), specifically the call automation demo in the Python samples. The original code is copyright Microsoft Corporation and is used under the MIT License.
 
-The project uses:
-- Azure Communication Services for telephony
-- Azure OpenAI Service for conversation capabilities 
-- Azure AI Search for product information retrieval
-- Azure Key Vault for secure secrets management
-
 Code files borrowed from the original repository maintain their original copyright notices and MIT license.
