@@ -1,6 +1,6 @@
 # Call Automation Demo with Azure AI Search
 
-This project demonstrates how to build an AI-powered call center agent using Azure Communication Services, Azure OpenAI with realtime capabilities, and Azure AI Search for product information retrieval.
+This project demonstrates how to build an AI-powered customer service agent using Azure Communication Services, Azure OpenAI with realtime capabilities, Semantic Kernel, and Azure AI Search for product information retrieval.  See [rag-flow.mmd](rag-flow.mmd) for call flow with services involved.
 
 ## Features
 
