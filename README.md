@@ -49,7 +49,7 @@ Follow the step-by-step instructions in the [deployment guide](deployment-guide.
 
 ## Local Development
 
-To run the application locally (have not tested this):
+To run the application locally (**have not tested this**):
 
 1. Create a `.env` file with your Azure credentials (see deployment guide)
 2. Install dependencies: `pip install -r requirements.txt`
