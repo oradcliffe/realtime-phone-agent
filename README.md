@@ -32,10 +32,6 @@ Instead:
 2. Fill in your own values for each environment variable
 3. Keep this file secure and only on your local development machine
 
-## Deployment
-
-Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.
-
 ## Project Structure
 
 - `call_automation.py` - Main application with realtime audio capabilities
@@ -47,9 +43,13 @@ Follow the step-by-step instructions in the [deployment guide](deployment-guide.
 - `.gitignore` - Prevents sensitive files from being uploaded
 - `deployment-guide.md` - Detailed deployment instructions
 
+## Deployment
+
+Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.
+
 ## Local Development
 
-To run the application locally:
+To run the application locally (have not tested this):
 
 1. Create a `.env` file with your Azure credentials (see deployment guide)
 2. Install dependencies: `pip install -r requirements.txt`
