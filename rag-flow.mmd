@@ -6,11 +6,11 @@ sequenceDiagram
     participant AOI as Azure OpenAI
     participant Search as Azure AI Search
 
-    User->>ACS: Voice call
+    User->>ACS: PSTN Voice call
     ACS->>App: Incoming call event
     App->>ACS: Answer call
     
-    note right of User: Real-time conversation flow
+    note right of User: Real-time voice conversation flow
     User->>ACS: "Do you have waterproof cameras?"
     ACS->>App: Audio stream (WebSocket)
     App->>AOI: Stream audio
