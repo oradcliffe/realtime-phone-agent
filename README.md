@@ -42,6 +42,8 @@ Instead:
 - `deploy.sh` - Deployment script for creating Azure resources
 - `.gitignore` - Prevents sensitive files from being uploaded
 - `deployment-guide.md` - Detailed deployment instructions
+- `products.json.example` - JSON array of sample outdoor consumer products
+- `rag-flow.mmd` - Mermaid visualization of call and app flow
 
 ## Deployment
 
