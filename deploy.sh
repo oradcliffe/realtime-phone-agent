@@ -132,7 +132,7 @@ USER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
 
 # Grant the current user Key Vault Secrets Officer role for managing secrets
 echo "Granting the current user Key Vault Secrets Officer role..."
-az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Secrets Officer" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
+az role assignment create --assignee $USER_OBJECT_ID --role "Key Vault Secrets Officer" --scope "subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
 
 # Wait for RBAC role assignment to propagate (this is important!)
 echo "Waiting 30 seconds for RBAC role assignment to propagate..."
@@ -245,7 +245,7 @@ PRINCIPAL_ID=$(az webapp identity show --name $APP_NAME --resource-group $RESOUR
 
 # Grant Key Vault Secrets User role to the web app's managed identity
 echo "Granting Key Vault Secrets User role to the web app's managed identity..."
-az role assignment create --assignee $PRINCIPAL_ID --role "Key Vault Secrets User" --scope "/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
+az role assignment create --assignee $PRINCIPAL_ID --role "Key Vault Secrets User" --scope "subscriptions/$(az account show --query id -o tsv)/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEYVAULT_NAME"
 
 # Set Key Vault reference app settings
 echo "Setting Key Vault reference app settings..."
