@@ -49,6 +49,7 @@ Before deploying, ensure you have the following:
      - This is required for creating the deployment package
      - Most Linux distributions and macOS have this installed by default
      - For Windows, use WSL or install via GnuWin32
+     - Deploy script tested using Git Bash on Windows - need to add `zip.exe` to %localappdata%\Programs\Git\usr\bin
 
 4. **Configuration**:
    - A `.env` file with all required variables filled in (see [.env.example](.env.example) for details)
