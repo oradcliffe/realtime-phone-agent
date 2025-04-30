@@ -47,7 +47,7 @@ Instead:
 
 ## Deployment
 
-Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.
+Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.  Note - you will see errors after the app deploys; this is a quick WIP project.  Feel free to clone and fix!
 
 ## Local Development
 
