@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant User
+    participant ACS as Azure Communication Services
+    participant App as App Service
+    participant SK as Semantic Kernel
+    participant AOI as Azure OpenAI
+    participant Search as Azure AI Search
+
+    User->>ACS: PSTN Voice call
+    ACS->>App: Incoming call event
+    App->>ACS: Answer call
+    
+    note right of User: Real-time voice conversation flow
+    User->>ACS: "Do you have waterproof cameras?"
+    ACS->>App: Audio stream (WebSocket)
+    App->>AOI: Stream audio
+    AOI->>AOI: Transcribe audio
+    AOI->>SK: Identify product query
+    SK->>Search: search_products("waterproof cameras")
+    Search->>SK: Return product results
+    SK->>AOI: Provide search results
+    AOI->>AOI: Generate response with results
+    AOI->>App: Text and audio response
+    App->>ACS: Stream audio response
+    ACS->>User: "Yes, we have several waterproof cameras..."
+    
+    note right of User: Follow-up question
+    User->>ACS: "What's the battery life?"
+    ACS->>App: Audio stream
+    App->>AOI: Stream audio
+    AOI->>AOI: Transcribe audio
+    AOI->>SK: Identify follow-up query
+    SK->>Search: search_products("waterproof camera battery life")
+    Search->>SK: Return specific details
+    SK->>AOI: Provide search results
+    AOI->>AOI: Generate contextualized response
+    AOI->>App: Text and audio response
+    App->>ACS: Stream audio response
+    ACS->>User: "The battery life on our waterproof cameras..."
+    
+    User->>ACS: End call
+    ACS->>App: Call ended event

@@ -1,6 +1,6 @@
 # Call Automation Demo with Azure AI Search
 
-This project demonstrates how to build an AI-powered call center agent using Azure Communication Services, Azure OpenAI with realtime capabilities, and Azure AI Search for product information retrieval.
+This project demonstrates how to build an AI-powered customer service agent using Azure Communication Services, Azure OpenAI with realtime capabilities, Semantic Kernel, and Azure AI Search for product information retrieval.  See [rag-flow.mmd](rag-flow.mmd) for call flow with services involved.
 
 ## Features
 
@@ -32,10 +32,6 @@ Instead:
 2. Fill in your own values for each environment variable
 3. Keep this file secure and only on your local development machine
 
-## Deployment
-
-Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.
-
 ## Project Structure
 
 - `call_automation.py` - Main application with realtime audio capabilities
@@ -46,10 +42,16 @@ Follow the step-by-step instructions in the [deployment guide](deployment-guide.
 - `deploy.sh` - Deployment script for creating Azure resources
 - `.gitignore` - Prevents sensitive files from being uploaded
 - `deployment-guide.md` - Detailed deployment instructions
+- `products.json.example` - JSON array of sample outdoor consumer products
+- `rag-flow.mmd` - Mermaid visualization of call and app flow
+
+## Deployment
+
+Follow the step-by-step instructions in the [deployment guide](deployment-guide.md) to set up and deploy the application.
 
 ## Local Development
 
-To run the application locally:
+To run the application locally (**have not tested this**):
 
 1. Create a `.env` file with your Azure credentials (see deployment guide)
 2. Install dependencies: `pip install -r requirements.txt`
@@ -62,11 +64,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgements
 
 This project is based on code from the [Microsoft Semantic Kernel repository](https://github.com/microsoft/semantic-kernel), specifically the call automation demo in the Python samples. The original code is copyright Microsoft Corporation and is used under the MIT License.
-
-The project uses:
-- Azure Communication Services for telephony
-- Azure OpenAI Service for conversation capabilities 
-- Azure AI Search for product information retrieval
-- Azure Key Vault for secure secrets management
 
 Code files borrowed from the original repository maintain their original copyright notices and MIT license.
