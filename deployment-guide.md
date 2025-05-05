@@ -42,7 +42,6 @@ Before deploying, ensure you have the following:
    - If using semantic search: A semantic configuration named "default" or update the code accordingly
 
 3. **Local Tools**:
-   - Azure CLI installed and authenticated (`az login`)
    - Git (optional, for version control)
    - Bash shell (or similar for running the deployment script)
    - `zip` command installed
@@ -50,6 +49,7 @@ Before deploying, ensure you have the following:
      - Most Linux distributions and macOS have this installed by default
      - For Windows, use WSL or install via GnuWin32 (tested with WSL2)
      - Deploy script tested using Git Bash on Windows - need to add `zip.exe` to %localappdata%\Programs\Git\usr\bin
+   - Azure CLI installed and authenticated (`az login`)
 
 4. **Configuration**:
    - A `.env` file with all required variables filled in (see [.env.example](.env.example) for details)
@@ -179,14 +179,7 @@ For the application to work correctly, you need to set up an Azure AI Search ind
    cd call-automation-deploy
    ```
 
-2. **Copy all files to this directory**:
-   - `call_automation.py`
-   - `search_plugin.py`
-   - `requirements.txt`
-   - `startup.txt`
-   - `web.config`
-   - `deploy.sh`
-   - `.env` (your environment variables)
+2. **Copy all files to this directory**
 
 3. **Run the deployment script**:
    ```bash
@@ -195,7 +188,7 @@ For the application to work correctly, you need to set up an Azure AI Search ind
 
    This script will:
    - Create a resource group
-   - Create a Key Vault and populate it with your secrets
+   - Create a Key Vault and populate it with your secrets from `.env`
    - Create an App Service plan
    - Create a web app
    - Enable managed identity and grant Key Vault access
@@ -206,30 +199,7 @@ For the application to work correctly, you need to set up an Azure AI Search ind
 
 After successfully deploying your application, you need to configure these additional components:
 
-### 1. Grant Azure AI Search Permissions
-
-Your App Service needs permissions to access your Azure AI Search index:
-
-```bash
-# Get the principal ID of the App Service's managed identity
-PRINCIPAL_ID=$(az webapp identity show --name your-app-name --resource-group call-automation-demo-rg --query principalId --output tsv)
-
-# Grant Search Index Reader role on the Azure AI Search resource
-az role assignment create \
-  --assignee $PRINCIPAL_ID \
-  --role "Search Index Reader" \
-  --scope /subscriptions/your-subscription-id/resourceGroups/your-resource-group/providers/Microsoft.Search/searchServices/your-search-service-name
-```
-
-Alternatively, through the Azure Portal:
-1. Go to your Azure AI Search resource
-2. Select "Access control (IAM)" → "Add" → "Add role assignment"
-3. Choose "Search Index Reader" role
-4. Under "Assign access to," select "Managed identity"
-5. Click "Select members" and choose your App Service's managed identity
-6. Complete the assignment
-
-### 2. Configure Event Grid for Call Notification
+### 1. Configure Event Grid for Call Notification
 
 1. Go to your **Azure Communication Services** resource in the Azure portal
 2. Select **Events** from the left navigation menu
@@ -248,7 +218,7 @@ Alternatively, through the Azure Portal:
    - Your application should respond correctly if it's running
    - Check the Event Grid subscription status to ensure it shows as "Active"
 
-### 3. Test Your Deployment
+### 2. Test Your Deployment
 
 1. **Make a test call** to your ACS phone number
 2. **Monitor the logs** to see the interaction:
@@ -261,7 +231,7 @@ Alternatively, through the Azure Portal:
    - Azure OpenAI realtime model responds
    - Azure AI Search results are returned when asking about products
 
-### 4. Set Up Application Insights (Optional)
+### 3. Set Up Application Insights (Optional)
 
 For better monitoring and diagnostics:
 
